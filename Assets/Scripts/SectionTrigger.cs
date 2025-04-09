@@ -4,12 +4,13 @@ public class SectionTrigger : MonoBehaviour
 {
 
     [SerializeField] GameObject roadSeaction;
+    [SerializeField] Vector3 spawnPoint;
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Trigger"))
         {
-            Instantiate(roadSeaction,new Vector3(0, 0, -19), Quaternion.identity);
+            Instantiate(roadSeaction, spawnPoint, Quaternion.identity);
         }
     }
 }

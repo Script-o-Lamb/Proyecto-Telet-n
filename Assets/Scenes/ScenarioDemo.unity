@@ -287,7 +287,7 @@ Transform:
   m_GameObject: {fileID: 930792958}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 45}
+  m_LocalPosition: {x: 0, y: 0, z: 50}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -561,7 +561,7 @@ Transform:
   m_GameObject: {fileID: 1461037705}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5, z: 11}
+  m_LocalPosition: {x: 0, y: 1.1, z: 11}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -580,6 +580,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   roadSeaction: {fileID: 171888887567920687, guid: 26066776266cb4f428b1226a4814e926, type: 3}
+  spawnPoint: {x: 0, y: 0, z: -20}
 --- !u!1001 &2850475149816069618
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -606,7 +607,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 318909064319611272, guid: 26066776266cb4f428b1226a4814e926, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 10.01
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 318909064319611272, guid: 26066776266cb4f428b1226a4814e926, type: 3}
       propertyPath: m_LocalRotation.w
