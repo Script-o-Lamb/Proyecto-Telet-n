@@ -612,7 +612,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 0d601a8549c2cbe4cac5c6a5a8f5e804, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -701,10 +701,10 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 120
+  m_Constraints: 124
   m_CollisionDetection: 0
 --- !u!135 &1461037707
 SphereCollider:
@@ -789,7 +789,7 @@ Transform:
   m_GameObject: {fileID: 1461037705}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.2, z: -19.3}
+  m_LocalPosition: {x: 0, y: 0.5, z: -19.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -823,6 +823,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   walkSpeed: 5
   ropeSpeed: 2
+  movement: 0
 --- !u!1001 &2850475149816069618
 PrefabInstance:
   m_ObjectHideFlags: 0

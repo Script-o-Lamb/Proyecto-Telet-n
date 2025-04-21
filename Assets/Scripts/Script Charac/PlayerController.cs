@@ -16,19 +16,19 @@ public class PlayerController : MonoBehaviour
     private float balanceOffset = 0f;
     private Vector3 ropeDirection;
 
+    public float movement;
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        rb.isKinematic = false;
     }
 
-    void Update()
+    private void FixedUpdate()
     {
         if (!isOnRope)
         {
-            float h = Input.GetAxis("Horizontal");
-            transform.Translate(Vector3.forward * walkSpeed * Time.deltaTime);
-            transform.Translate(Vector3.right * h * walkSpeed * Time.deltaTime);
+            movement = Input.GetAxis("Horizontal");
+            rb.linearVelocity = new Vector3(movement, 0f, 0f).normalized * walkSpeed;
         }
-    }        
+    }
 }
