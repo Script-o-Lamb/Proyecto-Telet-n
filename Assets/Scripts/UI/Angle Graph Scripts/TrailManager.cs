@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class TrailManager : MonoBehaviour
 {
+    public RecordedTrailData trailDataAsset;
     public DotPool dotPool;
     public RectTransform canvasRect;
     public float trailSpacing = 0.1f;
@@ -52,5 +53,14 @@ public class TrailManager : MonoBehaviour
     public List<float> GetRecordedYPositions()
     {
         return recordedYPositions;
+    }
+
+    void OnDisable()
+    {
+        if (trailDataAsset != null)
+        {
+            trailDataAsset.recordedYPositions.Clear();
+            trailDataAsset.recordedYPositions.AddRange(recordedYPositions);
+        }
     }
 }
