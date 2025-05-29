@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8644208702224545607}
   - component: {fileID: 3278869359597174308}
   m_Layer: 5
-  m_Name: Final Graph Dot
+  m_Name: Final Graph Dot Y
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
