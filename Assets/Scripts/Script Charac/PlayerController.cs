@@ -25,10 +25,8 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        //if (!isOnRope)
-        //{
-            movement = Input.GetAxis("Horizontal");
-            rb.linearVelocity = new Vector3(movement, 0f, 0f).normalized * walkSpeed;
-        //}
+        movement = Input.GetAxis("Horizontal");
+        rb.linearVelocity = new Vector3(movement, 0f, 0f).normalized * walkSpeed;
+
     }
 }

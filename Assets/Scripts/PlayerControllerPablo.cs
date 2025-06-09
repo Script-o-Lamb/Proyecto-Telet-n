@@ -2,20 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour 
+public class PlayerControllerPablo : MonoBehaviour 
 {
     [Header("General Movement")]
-    public float forwardSpeed = 5f; 
-    public float lateralSpeed = 5f; 
+    public float forwardSpeed = 5f;
+    public float lateralSpeed = 5f;
 
     [Header("Rope Tilt")]
-    public float balanceSpeed = 50f; 
-    public float maxTiltAngle = 10f; 
-    public bool onRope = false; 
+    public float balanceSpeed = 50f;
+    public float maxTiltAngle = 10f;
+    public bool onRope = false;
     public float ropeSpeed = 1.0f;
 
     [Header("Disk Movement")]
-    
+
 
     private Rigidbody rb;
     private float currentTilt = 0f;
@@ -57,7 +57,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    
+
 
     private void OnTriggerEnter(Collider other)
     {
@@ -68,7 +68,7 @@ public class PlayerController : MonoBehaviour
             AttachToRope();
         }
     }
-   
+
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Rope"))
@@ -84,7 +84,7 @@ public class PlayerController : MonoBehaviour
         if (ropeCollider != null)
         {
             Bounds bounds = ropeCollider.bounds;
-            float yOffset = 0.5f; 
+            float yOffset = 0.5f;
 
             Vector3 newPosition = new Vector3(bounds.center.x, bounds.max.y + yOffset, transform.position.z);
             transform.position = newPosition;
@@ -109,5 +109,4 @@ public class PlayerController : MonoBehaviour
         rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
         rb.useGravity = true;
     }
-
 }
