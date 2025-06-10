@@ -2,32 +2,33 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    [Header("General Movement")]
+    [Header("Movimiento General")]
     public float walkSpeed = 5f;
 
-    [Header("Rope Mode")]
+    [Header("Modo Cuerda Floja")]
     public float rotationSpeed = 100f;
-    public bool onRope = false;
-    public float maxRopeAngle = 45f; // grados máximos de giro permitidos
-    private float currentAngle = 0f;
+    public float maxTiltAngle = 20f;
 
-    private Transform ropePivot;
+    public bool onRope = false;
+    private Transform staticPivot;
+    private float fixedZ;
+
     private Rigidbody rb;
     private float movement;
-    private Vector3 initialOffset; // offset inicial respecto al centro del cilindro
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        fixedZ = transform.position.z;
     }
 
-    private void FixedUpdate()
+    void FixedUpdate()
     {
         movement = Input.GetAxis("Horizontal");
 
-        if (onRope && ropePivot != null)
+        if (onRope && staticPivot != null)
         {
-            RotateAroundRope();
+            RotateAroundStaticPivot();
         }
         else
         {
@@ -37,33 +38,42 @@ public class PlayerController : MonoBehaviour
 
     private void MoveNormally()
     {
-        Vector3 newVelocity = new Vector3(movement * walkSpeed, rb.linearVelocity.y, rb.linearVelocity.z);
+        Vector3 newVelocity = new Vector3(movement * walkSpeed, rb.linearVelocity.y, 0f);
         rb.linearVelocity = newVelocity;
     }
 
-    private void RotateAroundRope()
+    private void RotateAroundStaticPivot()
     {
-        float deltaAngle = movement * rotationSpeed * Time.fixedDeltaTime;
-        currentAngle = Mathf.Clamp(currentAngle + deltaAngle, -maxRopeAngle, maxRopeAngle);
+        if (staticPivot == null) return;
 
-        Vector3 ropeAxis = ropePivot.forward;
+        float desiredRotation = movement * rotationSpeed * Time.fixedDeltaTime;
 
-        // Para que rote sobre el eje z del ropePivot, hacemos:
-        // rotar el personaje alrededor del eje ropeAxis en ropePivot.position, pero con el ángulo acumulado "currentAngle"
+        // Calcular vector desde el centro del cilindro al personaje
+        Vector3 toPlayer = transform.position - staticPivot.position;
 
-        // Primero, poner al personaje en la posición correcta (offset desde ropePivot)
-        Vector3 offset = transform.position - ropePivot.position;
+        // El eje de rotación es el local right del cilindro
+        Vector3 rotationAxis = staticPivot.right;
 
-        // Rotamos el offset desde su posición inicial
-        Quaternion rotation = Quaternion.AngleAxis(currentAngle, ropeAxis);
-        Vector3 rotatedOffset = rotation * initialOffset;
+        // Proyectamos el vector al personaje en el plano perpendicular al eje de rotación
+        Vector3 projected = Vector3.ProjectOnPlane(toPlayer, rotationAxis).normalized;
 
-        transform.position = ropePivot.position + rotatedOffset;
+        // Elegimos un vector de referencia en el mismo plano (usamos up del cilindro)
+        Vector3 reference = Vector3.ProjectOnPlane(staticPivot.up, rotationAxis).normalized;
 
-        // Finalmente, rotamos al personaje para que esté alineado con el ángulo actual
-        transform.rotation = rotation;
+        // Obtenemos el ángulo firmado entre los vectores
+        float angle = Vector3.SignedAngle(reference, projected, rotationAxis);
 
-        // No movemos rb, o seteamos rb.linearVelocity a cero
+        // Limitamos la rotación solo si no excede los ángulos
+        if ((movement > 0 && angle < maxTiltAngle) || (movement < 0 && angle > -maxTiltAngle))
+        {
+            transform.RotateAround(staticPivot.position, rotationAxis, desiredRotation);
+        }
+
+        // Mantener al personaje fijo en el eje Z
+        Vector3 pos = transform.position;
+        pos.z = fixedZ;
+        transform.position = pos;
+
         rb.linearVelocity = Vector3.zero;
     }
 
@@ -71,15 +81,19 @@ public class PlayerController : MonoBehaviour
     {
         if (other.CompareTag("Rope"))
         {
-            ropePivot = other.transform.Find("Cilindro");
-            if (ropePivot != null)
+            Transform rope = other.transform.Find("Cilindro");
+            if (rope != null)
             {
-                AlignWithRopeX(ropePivot);
+                GameObject pivotGO = new GameObject("StaticPivot");
+                pivotGO.transform.position = rope.position;
+                pivotGO.transform.rotation = rope.rotation;
+                staticPivot = pivotGO.transform;
+
+                AlignWithRopeX(staticPivot);
                 onRope = true;
                 rb.useGravity = false;
 
-                // Guardar offset inicial respecto al cilindro
-                initialOffset = transform.position - ropePivot.position;
+                fixedZ = transform.position.z;
             }
         }
     }
@@ -89,8 +103,17 @@ public class PlayerController : MonoBehaviour
         if (other.CompareTag("Rope"))
         {
             onRope = false;
-            ropePivot = null;
             rb.useGravity = true;
+
+            if (staticPivot != null)
+                Destroy(staticPivot.gameObject);
+
+            staticPivot = null;
+
+            // Restaurar rotación Z
+            Vector3 euler = transform.eulerAngles;
+            euler.z = 0f;
+            transform.eulerAngles = euler;
         }
     }
 
@@ -99,5 +122,12 @@ public class PlayerController : MonoBehaviour
         Vector3 pos = transform.position;
         pos.x = pivot.position.x;
         transform.position = pos;
+    }
+
+    private float NormalizeAngle(float angle)
+    {
+        angle %= 360f;
+        if (angle > 180f) angle -= 360f;
+        return angle;
     }
 }
