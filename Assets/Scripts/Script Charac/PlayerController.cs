@@ -15,16 +15,19 @@ public class PlayerController : MonoBehaviour
 
     private Rigidbody rb;
     private float movement;
+    private Animator animator;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        animator = GetComponent<Animator>();
         fixedZ = transform.position.z;
     }
 
     void FixedUpdate()
     {
         movement = Input.GetAxis("Horizontal");
+
 
         if (onRope && staticPivot != null)
         {
@@ -34,12 +37,17 @@ public class PlayerController : MonoBehaviour
         {
             MoveNormally();
         }
+
+        float leanInput = Input.GetAxis("Horizontal");
+        animator.SetFloat("LeanDirection", leanInput);
+
     }
 
     private void MoveNormally()
     {
         Vector3 newVelocity = new Vector3(movement * walkSpeed, rb.linearVelocity.y, 0f);
         rb.linearVelocity = newVelocity;
+        
     }
 
     private void RotateAroundStaticPivot()
@@ -94,6 +102,7 @@ public class PlayerController : MonoBehaviour
                 rb.useGravity = false;
 
                 fixedZ = transform.position.z;
+                animator.Play("Balance");
             }
         }
     }
@@ -114,6 +123,9 @@ public class PlayerController : MonoBehaviour
             Vector3 euler = transform.eulerAngles;
             euler.z = 0f;
             transform.eulerAngles = euler;
+
+            animator.Play("LeanBlend");
+            transform.rotation = Quaternion.Euler(0f, -90f, 0f);
         }
     }
 
