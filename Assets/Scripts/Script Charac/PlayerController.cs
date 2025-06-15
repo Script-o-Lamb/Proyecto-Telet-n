@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour
     public bool onRope = false;
     private Transform staticPivot;
     private float fixedZ;
+    private float fixedY;
 
     private Rigidbody rb;
     private float movement;
@@ -22,6 +23,7 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
         fixedZ = transform.position.z;
+        fixedY = transform.position.y;
     }
 
     void FixedUpdate()
@@ -80,6 +82,7 @@ public class PlayerController : MonoBehaviour
         // Mantener al personaje fijo en el eje Z
         Vector3 pos = transform.position;
         pos.z = fixedZ;
+        pos.y = fixedY;
         transform.position = pos;
 
         rb.linearVelocity = Vector3.zero;
@@ -102,6 +105,7 @@ public class PlayerController : MonoBehaviour
                 rb.useGravity = false;
 
                 fixedZ = transform.position.z;
+                fixedY = transform.position.y;
                 animator.Play("Balance");
             }
         }
