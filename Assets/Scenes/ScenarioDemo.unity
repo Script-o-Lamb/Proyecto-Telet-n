@@ -582,6 +582,9 @@ MonoBehaviour:
   rotationSpeed: 200
   maxTiltAngle: 45
   onRope: 0
+  tiltThreshold: 25
+  pointsLossPerTick: 10
+  lossInterval: 0.1
 --- !u!54 &576049262
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1006,22 +1009,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76bc355a25caa4149b3eafcfab737c6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pools:
-  - tag: GrandeA
-    prefab: {fileID: 3096801243575283081, guid: 6a0f460d0d2b30c4db0cba10b2c4a749, type: 3}
-    size: 5
-  - tag: GrandeB
-    prefab: {fileID: 3096801243575283081, guid: dbf6514c0e0a2c24bb6b70663f844a05, type: 3}
-    size: 5
-  - tag: Mediano
-    prefab: {fileID: 4008689965402543754, guid: 17f5a1ce7d45ab140a0ae8d8e760105e, type: 3}
-    size: 10
-  - tag: PequenoA
-    prefab: {fileID: 2940931852408231872, guid: d547bebf9a2359840ad197b633a03e14, type: 3}
-    size: 10
-  - tag: PequenoB
-    prefab: {fileID: 2940931852408231872, guid: 6e6d24e7aa57c664295ac54f5c89481c, type: 3}
-    size: 10
+  pools: []
 --- !u!114 &956881210
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1786,8 +1774,8 @@ SceneRoots:
   - {fileID: 930792960}
   - {fileID: 554642426}
   - {fileID: 813897563}
-  - {fileID: 956881208}
   - {fileID: 1078926414}
+  - {fileID: 956881208}
   - {fileID: 250856348}
   - {fileID: 1492112128}
   - {fileID: 1419441776}

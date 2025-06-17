@@ -36,5 +36,7 @@ public class Points : MonoBehaviour
     public void SumarPuntos(float puntosEntrada)
     {
         puntos += puntosEntrada;
+        if (puntos < 0)
+            puntos = 0;
     }
 }
