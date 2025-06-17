@@ -27,8 +27,10 @@ public class PipeServer : MonoBehaviour
 
     [HideInInspector] // Para crear objeto a la altura del hombro
     public GameObject inclinometer;
+    
     private bool inclinometerCreated = false;
-
+    [Tooltip("Shoulder Grad")]
+    public float shoulderTiltAngle = 0f;
     private Body body;
     private NamedPipeServerStream server;
 
@@ -212,7 +214,7 @@ public class PipeServer : MonoBehaviour
         UpdateBody(body);
     }
     private void UpdateBody(Body b)
-    {
+    {      
         if (b.active == false) return;
 
         for (int i = 0; i < LANDMARK_COUNT; ++i)
@@ -254,7 +256,7 @@ public class PipeServer : MonoBehaviour
             {
                 inclinometer = GameObject.CreatePrimitive(PrimitiveType.Cube); 
                 inclinometer.name = "InclinometroHombros";
-                inclinometer.transform.localScale = new Vector3(0.2f, 2.8f, 0.5f); 
+                inclinometer.transform.localScale = new Vector3(2.8f, 0.2f, 0.5f); 
                 
                 Destroy(inclinometer.GetComponent<BoxCollider>());
                 inclinometer.transform.SetParent(b.parent); 
@@ -268,9 +270,13 @@ public class PipeServer : MonoBehaviour
 
                 inclinometer.transform.position = (leftShoulderPos + rightShoulderPos) / 2f;
 
-                Vector3 shoulderLine = rightShoulderPos - leftShoulderPos; 
+                Vector3 shoulderLine = leftShoulderPos - rightShoulderPos;
 
-                inclinometer.transform.rotation = Quaternion.LookRotation(Vector3.forward, shoulderLine);
+                Vector3 shoulderLine2D = new Vector3(shoulderLine.x, shoulderLine.y, 0);
+                float tiltAngle = Vector3.SignedAngle(Vector3.right, shoulderLine2D.normalized, Vector3.forward);
+                this.shoulderTiltAngle = tiltAngle;
+                inclinometer.transform.rotation = Quaternion.Euler(0, 0, tiltAngle);
+
             }
         }
     }
