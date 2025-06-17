@@ -2,18 +2,19 @@ using UnityEngine;
 
 public class GroundTile : MonoBehaviour
 {
-    private TileManager poolManager;
+    [SerializeField] private int speed = 10;
 
-    public void SetPoolManager(TileManager manager)
+    private void Update()
     {
-        poolManager = manager;
+        transform.position += Vector3.back * speed * Time.deltaTime;
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Destroy"))
         {
-            poolManager.ReturnTileToPool(this.gameObject);
+            TilePoolManager.Instance.ReturnTileToPool(this.gameObject);
+            TilePoolManager.Instance.SpawnTile();
         }
     }
 }

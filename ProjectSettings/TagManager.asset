@@ -7,6 +7,14 @@ TagManager:
   - Trigger
   - Rope
   - Destroy
+  - Disk
+  - Road
+  - GrandeA
+  - GrandeB
+  - Mediano
+  - PequenoA
+  - PequenoB
+  - CoinGroup
   layers:
   - Default
   - TransparentFX

@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ItemGroupPool : MonoBehaviour
+public class CoinGroupPoolManager : MonoBehaviour
 {
-    public static ItemGroupPool Instance;
+    public static CoinGroupPoolManager Instance;
 
     [System.Serializable]
     public class Pool
@@ -14,18 +14,19 @@ public class ItemGroupPool : MonoBehaviour
     }
 
     public List<Pool> pools;
-    public Dictionary<string, Queue<GameObject>> poolDictionary;
+    private Dictionary<string, Queue<GameObject>> poolDictionary;
 
-    void Awake()
+    private void Awake()
     {
-        Instance = this;
+        if (Instance == null)
+            Instance = this;
     }
 
-    void Start()
+    private void Start()
     {
         poolDictionary = new Dictionary<string, Queue<GameObject>>();
 
-        foreach (var pool in pools)
+        foreach (Pool pool in pools)
         {
             Queue<GameObject> objectPool = new Queue<GameObject>();
 
@@ -44,7 +45,7 @@ public class ItemGroupPool : MonoBehaviour
     {
         if (!poolDictionary.ContainsKey(tag))
         {
-            Debug.LogWarning("Pool with tag " + tag + " doesn't exist.");
+            Debug.LogWarning("Pool con tag " + tag + " no existe.");
             return null;
         }
 
