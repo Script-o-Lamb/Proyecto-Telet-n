@@ -23,6 +23,11 @@ public class PipeServer : MonoBehaviour
     public float landmarkScale = 1f;
     public float maxSpeed = 50f;
     public int samplesForPose = 1;
+    public float verticalOffset = 1.5f; //MODIFICACION PUNTO ANCLAJE
+
+    [HideInInspector] // Para crear objeto a la altura del hombro
+    public GameObject inclinometer;
+    private bool inclinometerCreated = false;
 
     private Body body;
     private NamedPipeServerStream server;
@@ -80,6 +85,10 @@ public class PipeServer : MonoBehaviour
                 {
                     instances[i].transform.localScale = Vector3.one * 0f;
                 }
+                if (i >= 25)
+                {
+                    instances[i].SetActive(false);
+                }
             }
             for (int i = 0; i < lines.Length; ++i)
             {
@@ -96,6 +105,7 @@ public class PipeServer : MonoBehaviour
         }
         public void UpdateLines()
         {
+            /*
             lines[0].positionCount = 4;
             lines[0].SetPosition(0, Position((Landmark)32));
             lines[0].SetPosition(1, Position((Landmark)30));
@@ -114,7 +124,7 @@ public class PipeServer : MonoBehaviour
             lines[3].positionCount = 3;
             lines[3].SetPosition(0, Position((Landmark)27));
             lines[3].SetPosition(1, Position((Landmark)25));
-            lines[3].SetPosition(2, Position((Landmark)23));
+            lines[3].SetPosition(2, Position((Landmark)23)); */
 
             lines[4].positionCount = 5;
             lines[4].SetPosition(0, Position((Landmark)24));
@@ -159,10 +169,10 @@ public class PipeServer : MonoBehaviour
                 lines[10].SetPosition(4, Position((Landmark)7));
             }
         }
-        public void Calibrate()
+        public void Calibrate(PipeServer server) //modificacion ()
         {
-            Vector3 centre = (localPositionTargets[(int)Landmark.LEFT_HIP] + localPositionTargets[(int)Landmark.RIGHT_HIP]) / 2f;
-            calibrationOffset = -centre;
+            Vector3 centre = (localPositionTargets[(int)Landmark.LEFT_SHOULDER] + localPositionTargets[(int)Landmark.RIGHT_SHOULDER]) / 2f;
+            calibrationOffset = -centre + new Vector3(0, server.verticalOffset, 0);
             setCalibration = true;
         }
 
@@ -216,7 +226,7 @@ public class PipeServer : MonoBehaviour
         if (!b.setCalibration)
         {
             print("Set Calibration Data");
-            b.Calibrate();
+            b.Calibrate(this);
 
             if(FindObjectOfType<CameraController>())
                 FindObjectOfType<CameraController>().Calibrate(b.instances[(int)Landmark.NOSE].transform);
@@ -237,6 +247,31 @@ public class PipeServer : MonoBehaviour
             Vector3 n1 = Vector3.Scale(new Vector3(.1f, 1f, .1f), GetNormal(b.Position((Landmark)0), b.Position((Landmark)8), b.Position((Landmark)7))).normalized;
             Vector3 n2 = Vector3.Scale(new Vector3(1f, .1f, 1f), GetNormal(b.Position((Landmark)0), b.Position((Landmark)4), b.Position((Landmark)1))).normalized;
             b.head.transform.rotation = Quaternion.LookRotation(-n2, n1);
+        }
+        if (b.active) // Funcionamiento inclinómetro
+        {
+            if (!inclinometerCreated)
+            {
+                inclinometer = GameObject.CreatePrimitive(PrimitiveType.Cube); 
+                inclinometer.name = "InclinometroHombros";
+                inclinometer.transform.localScale = new Vector3(0.2f, 2.8f, 0.5f); 
+                
+                Destroy(inclinometer.GetComponent<BoxCollider>());
+                inclinometer.transform.SetParent(b.parent); 
+                inclinometerCreated = true;
+                Debug.Log("Inclinómetro creado exitosamente!");
+            }
+            if (inclinometer != null)
+            {
+                Vector3 leftShoulderPos = b.Position(Landmark.LEFT_SHOULDER);
+                Vector3 rightShoulderPos = b.Position(Landmark.RIGHT_SHOULDER);
+
+                inclinometer.transform.position = (leftShoulderPos + rightShoulderPos) / 2f;
+
+                Vector3 shoulderLine = rightShoulderPos - leftShoulderPos; 
+
+                inclinometer.transform.rotation = Quaternion.LookRotation(Vector3.forward, shoulderLine);
+            }
         }
     }
 
@@ -275,6 +310,9 @@ public class PipeServer : MonoBehaviour
 
                     int i;
                     if (!int.TryParse(s[1], out i)) continue;
+
+                    if (i >= 25) continue; //MODIFICACION
+
                     h.positionsBuffer[i].value += new Vector3(float.Parse(s[2]), float.Parse(s[3]), float.Parse(s[4]));
                     h.positionsBuffer[i].accumulatedValuesCount += 1;
                     h.active = true;
