@@ -3,86 +3,80 @@ using UnityEngine;
 
 public class CoinGroupSpawner : MonoBehaviour
 {
-    [Header("Posiciones de los grupos grandes")]
-    public Transform grandePos1;
-    public Transform grandePos2;
-
-    [Header("Posiciones de los medianos")]
-    public Transform[] medianoPositions; // 4 posiciones
-
-    [Header("Posiciones de los pequeños")]
-    public Transform[] pequenoPositions; // 4 posiciones
-
-    [Header("Prefabs disponibles por grupo")]
-    public string[] grandesTags = { "GrandeA", "GrandeB" };
-    public string[] medianosTags = { "Mediano" };
-    public string[] pequenosTags = { "PequenoA", "PequenoB" };
-
-    private void OnEnable()
+    [System.Serializable]
+    public class CoinGroupOptions
     {
-        ClearChildren();
+        public Transform[] largePositions;
+        public Transform[] mediumPositions;
+        public Transform[] smallPositions;
+    }
+
+    public CoinGroupOptions spawnOptions;
+    public GameObject largePrefab1;
+    public GameObject largePrefab2;
+    public GameObject mediumPrefab;
+    public GameObject smallPrefab1;
+    public GameObject smallPrefab2;
+
+    [Header("Altura fija para los grupos")]
+    public float coinGroupHeight = 0f;  // Ajusta aquí la altura que deseas
+
+    void Start()
+    {
         SpawnGroups();
     }
 
-    private void ClearChildren()
+    void SpawnGroups()
     {
-        foreach (Transform child in transform)
+        List<int> occupiedPositions = new List<int>();
+
+        // 1. Intentar spawn de grupo grande
+        int largeSpawnChance = Random.Range(0, 3); // 0: pos1, 1: pos2, 2: no spawnea
+        if (largeSpawnChance != 2)
         {
-            if (child.CompareTag("CoinGroup"))
-                Destroy(child.gameObject);
-        }
-    }
+            Transform place = spawnOptions.largePositions[largeSpawnChance];
+            GameObject prefab = (Random.value < 0.5f) ? largePrefab1 : largePrefab2;
+            Vector3 spawnPos = place.position;
+            spawnPos.y = coinGroupHeight;
+            Instantiate(prefab, spawnPos, Quaternion.identity, transform);
 
-    private void SpawnGroups()
-    {
-        int grandePosition = 0;
-
-        int grandeChoice = Random.Range(0, 4); // 0 = no spawn, 1 = pos1, 2 = pos2, 3 = pos1 y luego 2
-
-        if (grandeChoice == 1 || grandeChoice == 3)
-        {
-            string tag = grandesTags[Random.Range(0, grandesTags.Length)];
-            SpawnGroup(tag, grandePos1);
-            grandePosition = 1;
-        }
-
-        if (grandeChoice == 2 || grandeChoice == 3)
-        {
-            string tag = grandesTags[Random.Range(0, grandesTags.Length)];
-            SpawnGroup(tag, grandePos2);
-            grandePosition = 2;
-        }
-
-        List<int> posicionesLibres = new List<int> { 1, 2, 3, 4 };
-
-        if (grandePosition == 1 || grandePosition == 2)
-        {
-            posicionesLibres.Remove(1);
-            posicionesLibres.Remove(2);
-        }
-
-        foreach (int pos in posicionesLibres)
-        {
-            if (Random.value < 0.5f)
+            // Bloquear las posiciones equivalentes en pequeños/medianos
+            if (largeSpawnChance == 0)
             {
-                string tag = medianosTags[0];
-                SpawnGroup(tag, medianoPositions[pos - 1]);
+                occupiedPositions.Add(0);
+                occupiedPositions.Add(1);
+            }
+            else if (largeSpawnChance == 1)
+            {
+                occupiedPositions.Add(2);
+                occupiedPositions.Add(3);
             }
         }
 
-        foreach (int pos in posicionesLibres)
+        // 2. Si spawneó grande, sólo permitir pequeños/medianos en espacios libres
+        for (int i = 0; i < spawnOptions.mediumPositions.Length; i++)
         {
+            if (occupiedPositions.Contains(i)) continue;
             if (Random.value < 0.5f)
             {
-                string tag = pequenosTags[Random.Range(0, pequenosTags.Length)];
-                SpawnGroup(tag, pequenoPositions[pos - 1]);
+                Transform place = spawnOptions.mediumPositions[i];
+                Vector3 spawnPos = place.position;
+                spawnPos.y = coinGroupHeight;
+                Instantiate(mediumPrefab, spawnPos, Quaternion.identity, transform);
             }
         }
-    }
 
-    private void SpawnGroup(string tag, Transform spawnPoint)
-    {
-        GameObject group = CoinGroupPoolManager.Instance.SpawnFromPool(tag, spawnPoint.position, spawnPoint.rotation);
-        group.transform.SetParent(transform);
+        for (int i = 0; i < spawnOptions.smallPositions.Length; i++)
+        {
+            if (occupiedPositions.Contains(i)) continue;
+            if (Random.value < 0.5f)
+            {
+                Transform place = spawnOptions.smallPositions[i];
+                GameObject prefab = (Random.value < 0.5f) ? smallPrefab1 : smallPrefab2;
+                Vector3 spawnPos = place.position;
+                spawnPos.y = coinGroupHeight;
+                Instantiate(prefab, spawnPos, Quaternion.identity, transform);
+            }
+        }
     }
 }

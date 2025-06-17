@@ -5,14 +5,22 @@ public class TilePoolManager : MonoBehaviour
 {
     public static TilePoolManager Instance;
 
-    public GameObject tilePrefabNormal;
-    public GameObject tilePrefabRope;
-    public Transform spawnOrigin;
+    [Header("Tile Settings")]
+    public GameObject normalTilePrefab;
+    public GameObject ropeTilePrefab;
     public int poolSize = 10;
     public float tileLength = 193.06f;
+    public float moveSpeed = 10f;
 
-    private Queue<GameObject> tilePool = new Queue<GameObject>();
+    [Header("Spawn Settings")]
+    public Transform spawnOrigin;
+    public int tilesAhead = 5;
+
+    private Queue<GameObject> normalTilePool = new Queue<GameObject>();
+    private Queue<GameObject> ropeTilePool = new Queue<GameObject>();
     private List<GameObject> activeTiles = new List<GameObject>();
+
+    private bool spawnNormalNext = true;
 
     private void Awake()
     {
@@ -22,48 +30,78 @@ public class TilePoolManager : MonoBehaviour
 
     private void Start()
     {
-        // Llenamos el pool inicial con la mezcla de prefabs
+        // Inicializamos pools separados
         for (int i = 0; i < poolSize; i++)
         {
-            GameObject prefabToUse = (Random.value > 0.5f) ? tilePrefabNormal : tilePrefabRope;
-            GameObject tile = Instantiate(prefabToUse, transform);
-            tile.SetActive(false);
-            tilePool.Enqueue(tile);
+            GameObject normalTile = Instantiate(normalTilePrefab, transform);
+            normalTile.SetActive(false);
+            normalTilePool.Enqueue(normalTile);
+
+            GameObject ropeTile = Instantiate(ropeTilePrefab, transform);
+            ropeTile.SetActive(false);
+            ropeTilePool.Enqueue(ropeTile);
         }
 
-        // Inicialmente spawnemos algunos tiles
-        for (int i = 0; i < poolSize / 2; i++)
+        // Llenamos inicialmente
+        for (int i = 0; i < tilesAhead; i++)
         {
             SpawnTile();
         }
     }
 
-    public void SpawnTile()
+    private void Update()
     {
-        if (tilePool.Count == 0) return;
+        MoveActiveTiles();
+    }
 
-        GameObject tile = tilePool.Dequeue();
-
-        Vector3 spawnPos;
-        if (activeTiles.Count == 0)
+    private void MoveActiveTiles()
+    {
+        foreach (var tile in activeTiles)
         {
-            spawnPos = spawnOrigin.position;
+            tile.transform.position += Vector3.back * moveSpeed * Time.deltaTime;
         }
-        else
-        {
-            GameObject lastTile = activeTiles[activeTiles.Count - 1];
-            spawnPos = lastTile.transform.position + Vector3.forward * tileLength;
-        }
-
-        tile.transform.position = spawnPos;
-        tile.SetActive(true);
-        activeTiles.Add(tile);
     }
 
     public void ReturnTileToPool(GameObject tile)
     {
-        tile.SetActive(false);
         activeTiles.Remove(tile);
-        tilePool.Enqueue(tile);
+        tile.SetActive(false);
+
+        // Devolver al pool correspondiente
+        if (tile.CompareTag("NormalTile"))
+            normalTilePool.Enqueue(tile);
+        else if (tile.CompareTag("RopeTile"))
+            ropeTilePool.Enqueue(tile);
+
+        SpawnTile(); // Spawneamos uno nuevo inmediatamente
+    }
+
+    private void SpawnTile()
+    {
+        GameObject tileToSpawn = null;
+
+        if (spawnNormalNext)
+        {
+            if (normalTilePool.Count > 0)
+                tileToSpawn = normalTilePool.Dequeue();
+        }
+        else
+        {
+            if (ropeTilePool.Count > 0)
+                tileToSpawn = ropeTilePool.Dequeue();
+        }
+
+        if (tileToSpawn == null) return;
+
+        Vector3 spawnPos = (activeTiles.Count == 0)
+            ? spawnOrigin.position
+            : activeTiles[activeTiles.Count - 1].transform.position + Vector3.forward * tileLength;
+
+        tileToSpawn.transform.position = spawnPos;
+        tileToSpawn.SetActive(true);
+        activeTiles.Add(tileToSpawn);
+
+        // Alternamos para el siguiente
+        spawnNormalNext = !spawnNormalNext;
     }
 }
