@@ -7,6 +7,16 @@ TagManager:
   - Trigger
   - Rope
   - Destroy
+  - Disk
+  - Road
+  - GrandeA
+  - GrandeB
+  - Mediano
+  - PequenoA
+  - PequenoB
+  - CoinGroup
+  - NormalTile
+  - RopeTile
   layers:
   - Default
   - TransparentFX

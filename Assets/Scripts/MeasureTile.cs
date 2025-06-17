@@ -4,13 +4,13 @@ public class MeasureTile : MonoBehaviour
 {
     private void OnDrawGizmos()
     {
-        Renderer rend = GetComponentInChildren<Renderer>();
-        if (rend != null)
+        Collider col = GetComponent<Collider>();
+        if (col != null)
         {
-            Gizmos.color = Color.green;
-            Vector3 size = rend.bounds.size;
-            Gizmos.DrawWireCube(rend.bounds.center, size);
-            Debug.Log($"Tamaño del suelo: {size}");
+            Gizmos.color = Color.cyan;
+            Vector3 size = col.bounds.size;
+            Gizmos.DrawWireCube(col.bounds.center, size);
+            Debug.Log($"Tamaño del collider: {size}");
         }
     }
 }

@@ -12,14 +12,26 @@ public class PlayerController : MonoBehaviour
     public bool onRope = false;
     private Transform staticPivot;
     private float fixedZ;
+    private float fixedY;
 
     private Rigidbody rb;
     private float movement;
+    private Animator animator;
+
+    [Header("Pérdida de puntos por inclinación")]
+    public float tiltThreshold = 10f; // Grados a partir de los cuales empieza a perder
+    public float pointsLossPerTick = 10f;  // Puntos que se pierden por tick
+    public float lossInterval = 1f; // Cada cuántos segundos pierde puntos
+
+    private float lossTimer = 0f;
+    private bool isTiltingTooMuch = false;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        animator = GetComponent<Animator>();
         fixedZ = transform.position.z;
+        fixedY = transform.position.y;
     }
 
     void FixedUpdate()
@@ -34,6 +46,9 @@ public class PlayerController : MonoBehaviour
         {
             MoveNormally();
         }
+
+        float leanInput = Input.GetAxis("Horizontal");
+        animator.SetFloat("LeanDirection", leanInput);
     }
 
     private void MoveNormally()
@@ -48,33 +63,48 @@ public class PlayerController : MonoBehaviour
 
         float desiredRotation = movement * rotationSpeed * Time.fixedDeltaTime;
 
-        // Calcular vector desde el centro del cilindro al personaje
         Vector3 toPlayer = transform.position - staticPivot.position;
-
-        // El eje de rotación es el local right del cilindro
         Vector3 rotationAxis = staticPivot.right;
-
-        // Proyectamos el vector al personaje en el plano perpendicular al eje de rotación
         Vector3 projected = Vector3.ProjectOnPlane(toPlayer, rotationAxis).normalized;
-
-        // Elegimos un vector de referencia en el mismo plano (usamos up del cilindro)
         Vector3 reference = Vector3.ProjectOnPlane(staticPivot.up, rotationAxis).normalized;
 
-        // Obtenemos el ángulo firmado entre los vectores
         float angle = Vector3.SignedAngle(reference, projected, rotationAxis);
 
-        // Limitamos la rotación solo si no excede los ángulos
         if ((movement > 0 && angle < maxTiltAngle) || (movement < 0 && angle > -maxTiltAngle))
         {
             transform.RotateAround(staticPivot.position, rotationAxis, desiredRotation);
         }
 
-        // Mantener al personaje fijo en el eje Z
         Vector3 pos = transform.position;
         pos.z = fixedZ;
+        pos.y = fixedY;
         transform.position = pos;
 
         rb.linearVelocity = Vector3.zero;
+
+        // Lógica de pérdida de puntos por inclinación
+        if (Mathf.Abs(angle) > tiltThreshold)
+        {
+            isTiltingTooMuch = true;
+        }
+        else
+        {
+            isTiltingTooMuch = false;
+            lossTimer = 0f;
+        }
+
+        if (isTiltingTooMuch)
+        {
+            lossTimer += Time.fixedDeltaTime;
+            if (lossTimer >= lossInterval)
+            {
+                if (Points.Instance != null)
+                {
+                    Points.Instance.SumarPuntos(-pointsLossPerTick);
+                }
+                lossTimer = 0f;
+            }
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -94,6 +124,8 @@ public class PlayerController : MonoBehaviour
                 rb.useGravity = false;
 
                 fixedZ = transform.position.z;
+                fixedY = transform.position.y;
+                animator.Play("Balance");
             }
         }
     }
@@ -110,10 +142,12 @@ public class PlayerController : MonoBehaviour
 
             staticPivot = null;
 
-            // Restaurar rotación Z
             Vector3 euler = transform.eulerAngles;
             euler.z = 0f;
             transform.eulerAngles = euler;
+
+            animator.Play("LeanBlend");
+            transform.rotation = Quaternion.Euler(0f, -90f, 0f);
         }
     }
 
