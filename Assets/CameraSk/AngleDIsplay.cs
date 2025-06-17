@@ -4,10 +4,8 @@ using TMPro;
 public class AngleDisplay : MonoBehaviour
 {
     [Header("Referencias")]
-    [Tooltip("Arrastra aquí el objeto de la escena que tiene el script PipeServer.")]
+    [Tooltip("Objeto PS")]
     public PipeServer pipeServer;
-
-    [Tooltip("El componente de texto donde se mostrará el ángulo.")]
     public TextMeshProUGUI angleTextElement;
 
     void Update()
