@@ -534,6 +534,14 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4515076599704634259, guid: 01e9336b875e5944b8cb5a884df0677a, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 229
+      objectReference: {fileID: 0}
+    - target: {fileID: 8130318435257262033, guid: 01e9336b875e5944b8cb5a884df0677a, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -34
+      objectReference: {fileID: 0}
     - target: {fileID: 8576263099646476653, guid: 01e9336b875e5944b8cb5a884df0677a, type: 3}
       propertyPath: m_Name
       value: Graph Renderer
