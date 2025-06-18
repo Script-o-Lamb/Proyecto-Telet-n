@@ -8,10 +8,12 @@ public class VirtualizedGraph : MonoBehaviour
     public GameObject dotPrefab;
     public GameObject linePrefab;
     public RectTransform contentRect;
-    public RectTransform scrollviewRect;
+    public RectTransform viewportRect;
+    public Scrollbar sharedScrollbar;
     public float pointSpacing = 10f;
 
     private float viewportWidth;
+    private float totalWidth;
     private int bufferCount;
     private int totalPoints;
 
@@ -23,22 +25,38 @@ public class VirtualizedGraph : MonoBehaviour
     void Start()
     {
         totalPoints = trailData.recordedYPositions.Count;
+        totalWidth = pointSpacing * totalPoints;
 
-        float totalWidth = pointSpacing * totalPoints;
+        // Ajustar tamaño del Content
         contentRect.sizeDelta = new Vector2(totalWidth, contentRect.sizeDelta.y);
 
-        viewportWidth = scrollviewRect.rect.width;
+        viewportWidth = viewportRect.rect.width;
+
         bufferCount = Mathf.CeilToInt(viewportWidth / pointSpacing) + 10;
 
-        UpdateVisibleDots();
+        // Aseguramos que el Scrollbar notifique al inicio
+        UpdateContentPosition();
+        UpdateVisibleElements();
     }
 
     void Update()
     {
-        UpdateVisibleDots();
+        UpdateContentPosition();
+        UpdateVisibleElements();
     }
 
-    void UpdateVisibleDots()
+    void UpdateContentPosition()
+    {
+        float normalizedPosition = sharedScrollbar.value;
+
+        // Calcula posición horizontal
+        float contentX = -(totalWidth - viewportWidth) * normalizedPosition;
+
+        // MUY IMPORTANTE: mantenemos siempre Y en 0 para centrar el Content verticalmente
+        contentRect.anchoredPosition = new Vector2(contentX, 0);
+    }
+
+    void UpdateVisibleElements()
     {
         float scrollX = contentRect.anchoredPosition.x;
         int firstVisibleIndex = Mathf.Max(0, Mathf.FloorToInt(-scrollX / pointSpacing));
@@ -88,7 +106,7 @@ public class VirtualizedGraph : MonoBehaviour
                 activeDots[i] = dot;
             }
 
-            // Dibujar línea entre este punto y el anterior
+            // Activar línea si corresponde
             if (i > 0 && !activeLines.ContainsKey(i - 1))
             {
                 float x0 = (i - 1) * pointSpacing;
@@ -109,7 +127,7 @@ public class VirtualizedGraph : MonoBehaviour
                 float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
 
                 lineRect.anchoredPosition = midPoint;
-                lineRect.sizeDelta = new Vector2(distance, lineRect.sizeDelta.y); // mantiene grosor vertical
+                lineRect.sizeDelta = new Vector2(distance, lineRect.sizeDelta.y);
                 lineRect.localRotation = Quaternion.Euler(0, 0, angle);
 
                 activeLines[i - 1] = line;
