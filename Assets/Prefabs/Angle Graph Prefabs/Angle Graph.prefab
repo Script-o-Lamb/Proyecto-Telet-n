@@ -180,6 +180,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c2a43aef65be754c96c0c7ad7b9cb99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trailDataAsset: {fileID: 0}
   dotPool: {fileID: 0}
   canvasRect: {fileID: 3327241556662566643}
   trailSpacing: 0.1

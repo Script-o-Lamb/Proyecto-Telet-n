@@ -1,11 +1,13 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using TMPro;
 
 public class Timer : MonoBehaviour
 {
     
-    private float tiempoRestante;
+    [SerializeField]private float tiempoRestante;
     private bool contadorActivo = true;
+    [SerializeField] string finalScene;
 
     public TextMeshProUGUI textoTiempo; // Asigna en el Inspector
 
@@ -28,8 +30,7 @@ public class Timer : MonoBehaviour
                 contadorActivo = false;
                 tiempoRestante = 0;
                 MostrarTiempo(tiempoRestante);
-                Debug.Log("¡Tiempo terminado!");
-                // Aquí puedes llamar otra función si quieres que pase algo al terminar
+                LoadNextScene();
             }
         }
     }
@@ -40,5 +41,10 @@ public class Timer : MonoBehaviour
         int minutos = Mathf.FloorToInt(tiempoAMostrar / 60);
         int segundos = Mathf.FloorToInt(tiempoAMostrar % 60);
         textoTiempo.text = string.Format("{0:00}:{1:00}", minutos, segundos);
+    }
+
+    void LoadNextScene()
+    {
+        SceneManager.LoadScene(finalScene);
     }
 }

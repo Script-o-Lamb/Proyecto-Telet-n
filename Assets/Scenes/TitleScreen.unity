@@ -624,9 +624,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 261878142}
-        m_TargetAssemblyTypeName: PanelSwitcher, Assembly-CSharp
-        m_MethodName: CambiarEscena
+      - m_Target: {fileID: 261878143}
+        m_TargetAssemblyTypeName: TimeSelector, Assembly-CSharp
+        m_MethodName: IniciarJuego
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -710,7 +710,7 @@ MonoBehaviour:
   panelRevisarPuntuacion: {fileID: 1986643926}
   panelComoJugar: {fileID: 7074313}
   panelPrepararNivel: {fileID: 586548807}
-  escena: ScenarioDemo
+  escena: 
 --- !u!114 &261878143
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -724,6 +724,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   textoTiempo: {fileID: 811765830}
+  escenarioJuego: ScenarioDemo
 --- !u!4 &261878144
 Transform:
   m_ObjectHideFlags: 0
@@ -1439,7 +1440,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 261878143}
         m_TargetAssemblyTypeName: TimeSelector, Assembly-CSharp
         m_MethodName: DisminuirTiempo
         m_Mode: 1
@@ -2215,8 +2216,8 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 811765829}
-  - {fileID: 1459217169}
   - {fileID: 385929088}
+  - {fileID: 1459217169}
   - {fileID: 194236029}
   - {fileID: 1282908528}
   m_Father: {fileID: 2005509466}
@@ -4474,7 +4475,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 261878143}
         m_TargetAssemblyTypeName: TimeSelector, Assembly-CSharp
         m_MethodName: AumentarTiempo
         m_Mode: 1

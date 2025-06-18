@@ -4,6 +4,7 @@ using UnityEngine;
 public class PauseMenu : MonoBehaviour
 {
     public GameObject pauseMenuUI; // El panel del menú de pausa
+    [SerializeField] string finalScene;
 
     private bool isPaused;
 
@@ -34,6 +35,6 @@ public class PauseMenu : MonoBehaviour
 
     public void QuitGame()
     {
-        SceneManager.LoadScene("Final");
+        SceneManager.LoadScene(finalScene);
     }
 }

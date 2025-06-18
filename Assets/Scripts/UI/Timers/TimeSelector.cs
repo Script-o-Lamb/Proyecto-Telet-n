@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 public class TimeSelector : MonoBehaviour
 {
     public TextMeshProUGUI textoTiempo;
+    [SerializeField] string escenarioJuego;
     private int tiempoSeleccionado = 40; // Valor inicial en minutos
 
     void Start()
@@ -38,6 +39,6 @@ public class TimeSelector : MonoBehaviour
     public void IniciarJuego()
     {
         GameSettings.tiempoEnSegundos = tiempoSeleccionado * 60;
-        SceneManager.LoadScene("ScenarioDemo");
+        SceneManager.LoadScene(escenarioJuego);
     }
 }
