@@ -1,33 +1,21 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class PanelSwitcher : MonoBehaviour
 {
-    [Header("Paneles Principales")]
-    public GameObject panelPrincipal;
-    public GameObject panelSeleccionarUsuario;
-    public GameObject panelOpciones;
-    public GameObject panelRevisarPuntuacion;
-    public GameObject panelComoJugar;
-    public GameObject panelPrepararNivel;
+    [Header("Paneles")]
+    public List<GameObject> paneles; // Lista genérica de paneles
 
     [Header("Escenas")]
     public string escena;
 
     public void MostrarPanel(GameObject panelAMostrar)
     {
-        OcultarTodosLosPaneles();
-        panelAMostrar.SetActive(true);
-    }
-
-    private void OcultarTodosLosPaneles()
-    {
-        panelPrincipal.SetActive(false);
-        panelSeleccionarUsuario.SetActive(false);
-        panelOpciones.SetActive(false);
-        panelRevisarPuntuacion.SetActive(false);
-        panelComoJugar.SetActive(false);
-        panelPrepararNivel.SetActive(false);
+        foreach (var panel in paneles)
+        {
+            panel.SetActive(panel == panelAMostrar);
+        }
     }
 
     public void CambiarEscena()

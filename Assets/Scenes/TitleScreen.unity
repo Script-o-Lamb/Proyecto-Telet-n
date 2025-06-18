@@ -704,12 +704,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21f91df9762140a4fbcc641f25160e82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  panelPrincipal: {fileID: 1599992374}
-  panelSeleccionarUsuario: {fileID: 1405148642}
-  panelOpciones: {fileID: 378157543}
-  panelRevisarPuntuacion: {fileID: 1986643926}
-  panelComoJugar: {fileID: 7074313}
-  panelPrepararNivel: {fileID: 586548807}
+  paneles:
+  - {fileID: 1599992374}
+  - {fileID: 1405148642}
+  - {fileID: 378157543}
+  - {fileID: 1986643926}
+  - {fileID: 7074313}
+  - {fileID: 586548807}
   escena: 
 --- !u!114 &261878143
 MonoBehaviour:
