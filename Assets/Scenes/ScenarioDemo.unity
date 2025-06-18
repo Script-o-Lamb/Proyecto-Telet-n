@@ -581,6 +581,7 @@ MonoBehaviour:
   walkSpeed: 20
   rotationSpeed: 200
   maxTiltAngle: 45
+  moveToRopeDuration: 1.5
   onRope: 0
 --- !u!54 &576049262
 Rigidbody:

@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using System.Collections;
 public class PlayerController : MonoBehaviour
 {
     [Header("Movimiento General")]
@@ -9,6 +9,9 @@ public class PlayerController : MonoBehaviour
     public float rotationSpeed = 100f;
     public float maxTiltAngle = 20f;
 
+    [Header("Transiciï¿½n a la Cuerda")]
+    public float moveToRopeDuration = 1.5f; // Tiempo configurable desde el inspector
+
     public bool onRope = false;
     private Transform staticPivot;
     private float fixedZ;
@@ -17,6 +20,8 @@ public class PlayerController : MonoBehaviour
     private Rigidbody rb;
     private float movement;
     private Animator animator;
+
+    private bool canMove = true; // Bloqueo de movimiento manual
 
     void Start()
     {
@@ -28,8 +33,9 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        movement = Input.GetAxis("Horizontal");
+        if (!canMove) return;
 
+        movement = Input.GetAxis("Horizontal");
 
         if (onRope && staticPivot != null)
         {
@@ -42,14 +48,12 @@ public class PlayerController : MonoBehaviour
 
         float leanInput = Input.GetAxis("Horizontal");
         animator.SetFloat("LeanDirection", leanInput);
-
     }
 
     private void MoveNormally()
     {
         Vector3 newVelocity = new Vector3(movement * walkSpeed, rb.linearVelocity.y, 0f);
         rb.linearVelocity = newVelocity;
-        
     }
 
     private void RotateAroundStaticPivot()
@@ -58,28 +62,18 @@ public class PlayerController : MonoBehaviour
 
         float desiredRotation = movement * rotationSpeed * Time.fixedDeltaTime;
 
-        // Calcular vector desde el centro del cilindro al personaje
         Vector3 toPlayer = transform.position - staticPivot.position;
-
-        // El eje de rotación es el local right del cilindro
         Vector3 rotationAxis = staticPivot.right;
-
-        // Proyectamos el vector al personaje en el plano perpendicular al eje de rotación
         Vector3 projected = Vector3.ProjectOnPlane(toPlayer, rotationAxis).normalized;
-
-        // Elegimos un vector de referencia en el mismo plano (usamos up del cilindro)
         Vector3 reference = Vector3.ProjectOnPlane(staticPivot.up, rotationAxis).normalized;
 
-        // Obtenemos el ángulo firmado entre los vectores
         float angle = Vector3.SignedAngle(reference, projected, rotationAxis);
 
-        // Limitamos la rotación solo si no excede los ángulos
         if ((movement > 0 && angle < maxTiltAngle) || (movement < 0 && angle > -maxTiltAngle))
         {
             transform.RotateAround(staticPivot.position, rotationAxis, desiredRotation);
         }
 
-        // Mantener al personaje fijo en el eje Z
         Vector3 pos = transform.position;
         pos.z = fixedZ;
         pos.y = fixedY;
@@ -100,15 +94,45 @@ public class PlayerController : MonoBehaviour
                 pivotGO.transform.rotation = rope.rotation;
                 staticPivot = pivotGO.transform;
 
-                AlignWithRopeX(staticPivot);
-                onRope = true;
-                rb.useGravity = false;
-
-                fixedZ = transform.position.z;
-                fixedY = transform.position.y;
-                animator.Play("Balance");
+                StartCoroutine(MoveToRope(staticPivot.position));
             }
         }
+    }
+
+    private IEnumerator MoveToRope(Vector3 targetPosition)
+    {
+        canMove = false;
+        onRope = false;
+        rb.useGravity = false;
+
+        animator.Play("JumpTrick");
+
+        float startX = transform.position.x;
+        float targetX = targetPosition.x;
+        float y = transform.position.y;
+        float z = transform.position.z;
+
+        float elapsed = 0f;
+
+        while (elapsed < moveToRopeDuration)
+        {
+            float t = elapsed / moveToRopeDuration;
+            t = Mathf.SmoothStep(0f, 1f, t);
+
+            float newX = Mathf.Lerp(startX, targetX, t);
+            transform.position = new Vector3(newX, y, z);
+
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.position = new Vector3(targetX, y, z);
+        fixedZ = z;
+        fixedY = y;
+
+        AlignWithRopeX(staticPivot);
+        onRope = true;
+        canMove = true;
     }
 
     private void OnTriggerExit(Collider other)
@@ -123,12 +147,11 @@ public class PlayerController : MonoBehaviour
 
             staticPivot = null;
 
-            // Restaurar rotación Z
             Vector3 euler = transform.eulerAngles;
             euler.z = 0f;
             transform.eulerAngles = euler;
 
-            animator.Play("LeanBlend");
+            animator.Play("BalanceOff");
             transform.rotation = Quaternion.Euler(0f, -90f, 0f);
         }
     }
