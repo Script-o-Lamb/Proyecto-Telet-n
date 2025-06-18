@@ -232,6 +232,17 @@ public class PipeServer : MonoBehaviour
 
             if(FindObjectOfType<CameraController>())
                 FindObjectOfType<CameraController>().Calibrate(b.instances[(int)Landmark.NOSE].transform);
+            
+            for (int i = 0; i < 25; i++)
+            {
+                if (b.instances[i] != null)
+                {
+                    // Calculamos la posición final a la que debería ir...
+                    Vector3 initialTargetPos = b.localPositionTargets[i] + b.calibrationOffset;
+                    // ...y la asignamos DIRECTAMENTE, sin MoveTowards.
+                    b.instances[i].transform.localPosition = initialTargetPos;
+                }
+            }
         }
 
         for (int i = 0; i < LANDMARK_COUNT; ++i)
