@@ -852,6 +852,7 @@ GameObject:
   - component: {fileID: 752250343}
   - component: {fileID: 752250344}
   - component: {fileID: 752250345}
+  - component: {fileID: 752250346}
   m_Layer: 0
   m_Name: UI Manager
   m_TagString: Untagged
@@ -918,8 +919,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63fea968d657a394c97c2afd85f188b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tiempoRestante: 0
   finalScene: ScenarioFinal
   textoTiempo: {fileID: 889657386}
+--- !u!114 &752250346
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 752250341}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d674c060c319d14693c309133c9f1f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  textMesh: {fileID: 1787300635}
 --- !u!4 &787379935 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3495547540206242757, guid: 6160aa71ec50e7346a100426c1591eee, type: 3}
@@ -1799,7 +1814,7 @@ GameObject:
   - component: {fileID: 1421146223}
   - component: {fileID: 1421146222}
   m_Layer: 5
-  m_Name: Button
+  m_Name: Button Terminar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2166,7 +2181,7 @@ GameObject:
   - component: {fileID: 1673368569}
   - component: {fileID: 1673368568}
   m_Layer: 5
-  m_Name: Button
+  m_Name: Button Reanudar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2374,7 +2389,6 @@ GameObject:
   - component: {fileID: 1787300634}
   - component: {fileID: 1787300636}
   - component: {fileID: 1787300635}
-  - component: {fileID: 1787300637}
   m_Layer: 5
   m_Name: Puntos
   m_TagString: Untagged
@@ -2500,18 +2514,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1787300633}
   m_CullTransparentMesh: 1
---- !u!114 &1787300637
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1787300633}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b99d2f3204df7c44aae2b42aa34893c3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &2073345530
 PrefabInstance:
   m_ObjectHideFlags: 0

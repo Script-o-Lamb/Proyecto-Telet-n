@@ -18,10 +18,10 @@ public class PlayerController : MonoBehaviour
     private float movement;
     private Animator animator;
 
-    [Header("Pérdida de puntos por inclinación")]
+    [Header("Pï¿½rdida de puntos por inclinaciï¿½n")]
     public float tiltThreshold = 10f; // Grados a partir de los cuales empieza a perder
     public float pointsLossPerTick = 10f;  // Puntos que se pierden por tick
-    public float lossInterval = 1f; // Cada cuántos segundos pierde puntos
+    public float lossInterval = 1f; // Cada cuï¿½ntos segundos pierde puntos
 
     private float lossTimer = 0f;
     private bool isTiltingTooMuch = false;
@@ -48,7 +48,8 @@ public class PlayerController : MonoBehaviour
         }
 
         float leanInput = Input.GetAxis("Horizontal");
-        animator.SetFloat("LeanDirection", leanInput);
+        if (animator != null)
+            animator.SetFloat("LeanDirection", leanInput);
     }
 
     private void MoveNormally()
@@ -82,7 +83,7 @@ public class PlayerController : MonoBehaviour
 
         rb.linearVelocity = Vector3.zero;
 
-        // Lógica de pérdida de puntos por inclinación
+        // Lï¿½gica de pï¿½rdida de puntos por inclinaciï¿½n
         if (Mathf.Abs(angle) > tiltThreshold)
         {
             isTiltingTooMuch = true;
@@ -98,9 +99,9 @@ public class PlayerController : MonoBehaviour
             lossTimer += Time.fixedDeltaTime;
             if (lossTimer >= lossInterval)
             {
-                if (Points.Instance != null)
+                if (GameFlowManager.Instance != null)
                 {
-                    Points.Instance.SumarPuntos(-pointsLossPerTick);
+                    GameFlowManager.Instance.AgregarPuntos(-pointsLossPerTick);
                 }
                 lossTimer = 0f;
             }
@@ -114,10 +115,14 @@ public class PlayerController : MonoBehaviour
             Transform rope = other.transform.Find("Cilindro");
             if (rope != null)
             {
-                GameObject pivotGO = new GameObject("StaticPivot");
-                pivotGO.transform.position = rope.position;
-                pivotGO.transform.rotation = rope.rotation;
-                staticPivot = pivotGO.transform;
+                // Evita crear mï¿½ltiples pivotes si ya existe uno
+                if (staticPivot == null)
+                {
+                    GameObject pivotGO = new GameObject("StaticPivot");
+                    pivotGO.transform.position = rope.position;
+                    pivotGO.transform.rotation = rope.rotation;
+                    staticPivot = pivotGO.transform;
+                }
 
                 AlignWithRopeX(staticPivot);
                 onRope = true;
@@ -125,7 +130,8 @@ public class PlayerController : MonoBehaviour
 
                 fixedZ = transform.position.z;
                 fixedY = transform.position.y;
-                animator.Play("Balance");
+                if (animator != null)
+                    animator.Play("Balance");
             }
         }
     }
@@ -138,15 +144,17 @@ public class PlayerController : MonoBehaviour
             rb.useGravity = true;
 
             if (staticPivot != null)
+            {
                 Destroy(staticPivot.gameObject);
-
-            staticPivot = null;
+                staticPivot = null;
+            }
 
             Vector3 euler = transform.eulerAngles;
             euler.z = 0f;
             transform.eulerAngles = euler;
 
-            animator.Play("LeanBlend");
+            if (animator != null)
+                animator.Play("LeanBlend");
             transform.rotation = Quaternion.Euler(0f, -90f, 0f);
         }
     }

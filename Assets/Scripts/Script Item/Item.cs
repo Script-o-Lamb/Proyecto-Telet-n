@@ -2,19 +2,18 @@ using UnityEngine;
 
 public class Item : MonoBehaviour
 {
-    [SerializeField] private float cantidadPuntos = 100;
+    [SerializeField] private float cantidadPuntos = 100f;
 
     void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            // Verifica que exista el sistema de puntos
-            if (Points.Instance != null)
+            if (GameFlowManager.Instance != null)
             {
-                Points.Instance.SumarPuntos(cantidadPuntos);
+                GameFlowManager.Instance.AgregarPuntos(cantidadPuntos);
             }
 
-            gameObject.SetActive(false); // o Destroy(gameObject);
+            gameObject.SetActive(false);
         }
 
         if (other.CompareTag("Destroy"))

@@ -4,15 +4,16 @@ using TMPro;
 
 public class Timer : MonoBehaviour
 {
-    
-    [SerializeField]private float tiempoRestante;
+
+    [SerializeField] private float tiempoRestante;
     private bool contadorActivo = true;
-    [SerializeField] string finalScene;
+    [SerializeField] private string finalScene;
 
     public TextMeshProUGUI textoTiempo; // Asigna en el Inspector
 
     void Start()
     {
+        Time.timeScale = 1f; // Reinicia el tiempo si venías de una pausa
         tiempoRestante = GameSettings.tiempoEnSegundos;
     }
 
@@ -45,6 +46,8 @@ public class Timer : MonoBehaviour
 
     void LoadNextScene()
     {
+        // Guardamos el puntaje final y pasamos a la escena final
+        GameFlowManager.Instance.GuardarPuntajeFinal();
         SceneManager.LoadScene(finalScene);
     }
 }
