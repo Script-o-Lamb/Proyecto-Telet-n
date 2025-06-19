@@ -1,24 +1,9 @@
 fileFormatVersion: 2
-guid: 4cf774d075e37f346bc7258554d64ff5
+guid: 5ae7780f6a6a88d4abd36b93c458fec9
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Leaves
-    second: {fileID: 2100000, guid: 8c0eb4ab375ba594f8ba52338031094a, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Wood
-    second: {fileID: 2100000, guid: b967280cde39fa249be33053a9bf01d2, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Wood2
-    second: {fileID: 2100000, guid: 0af5c60645e370b419d87655543cb62e, type: 2}
+  externalObjects: {}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -48,7 +33,7 @@ ModelImporter:
     isReadable: 0
   meshes:
     lODScreenPercentages: []
-    globalScale: 100
+    globalScale: 120
     meshCompression: 0
     addColliders: 0
     useSRGBMaterialColor: 1
@@ -103,7 +88,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 100
+    globalScale: 1.1999999
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0
