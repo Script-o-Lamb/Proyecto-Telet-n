@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class PlayerController : MonoBehaviour
 {
@@ -9,6 +10,9 @@ public class PlayerController : MonoBehaviour
     public float rotationSpeed = 100f;
     public float maxTiltAngle = 20f;
 
+    [Header("Transición a la Cuerda")]
+    public float moveToRopeDuration = 1.5f;
+
     public bool onRope = false;
     private Transform staticPivot;
     private float fixedZ;
@@ -17,11 +21,12 @@ public class PlayerController : MonoBehaviour
     private Rigidbody rb;
     private float movement;
     private Animator animator;
+    private bool canMove = true;
 
-    [Header("P�rdida de puntos por inclinaci�n")]
-    public float tiltThreshold = 10f; // Grados a partir de los cuales empieza a perder
-    public float pointsLossPerTick = 10f;  // Puntos que se pierden por tick
-    public float lossInterval = 1f; // Cada cu�ntos segundos pierde puntos
+    [Header("Pérdida de puntos por inclinación")]
+    public float tiltThreshold = 10f;
+    public float pointsLossPerTick = 10f;
+    public float lossInterval = 1f;
 
     private float lossTimer = 0f;
     private bool isTiltingTooMuch = false;
@@ -36,6 +41,8 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (!canMove) return;
+
         movement = Input.GetAxis("Horizontal");
 
         if (onRope && staticPivot != null)
@@ -83,7 +90,7 @@ public class PlayerController : MonoBehaviour
 
         rb.linearVelocity = Vector3.zero;
 
-        // L�gica de p�rdida de puntos por inclinaci�n
+        // Lógica de pérdida de puntos por inclinación
         if (Mathf.Abs(angle) > tiltThreshold)
         {
             isTiltingTooMuch = true;
@@ -113,27 +120,56 @@ public class PlayerController : MonoBehaviour
         if (other.CompareTag("Rope"))
         {
             Transform rope = other.transform.Find("Cilindro");
-            if (rope != null)
+            if (rope != null && staticPivot == null)
             {
-                // Evita crear m�ltiples pivotes si ya existe uno
-                if (staticPivot == null)
-                {
-                    GameObject pivotGO = new GameObject("StaticPivot");
-                    pivotGO.transform.position = rope.position;
-                    pivotGO.transform.rotation = rope.rotation;
-                    staticPivot = pivotGO.transform;
-                }
+                GameObject pivotGO = new GameObject("StaticPivot");
+                pivotGO.transform.position = rope.position;
+                pivotGO.transform.rotation = rope.rotation;
+                staticPivot = pivotGO.transform;
 
-                AlignWithRopeX(staticPivot);
-                onRope = true;
-                rb.useGravity = false;
-
-                fixedZ = transform.position.z;
-                fixedY = transform.position.y;
-                if (animator != null)
-                    animator.Play("Balance");
+                StartCoroutine(MoveToRope(staticPivot.position));
             }
         }
+    }
+
+    private IEnumerator MoveToRope(Vector3 targetPosition)
+    {
+        canMove = false;
+        onRope = false;
+        rb.useGravity = false;
+
+        if (animator != null)
+            animator.Play("JumpTrick");
+
+        float startX = transform.position.x;
+        float targetX = targetPosition.x;
+        float y = transform.position.y;
+        float z = transform.position.z;
+
+        float elapsed = 0f;
+
+        while (elapsed < moveToRopeDuration)
+        {
+            float t = elapsed / moveToRopeDuration;
+            t = Mathf.SmoothStep(0f, 1f, t);
+
+            float newX = Mathf.Lerp(startX, targetX, t);
+            transform.position = new Vector3(newX, y, z);
+
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.position = new Vector3(targetX, y, z);
+        fixedZ = z;
+        fixedY = y;
+
+        AlignWithRopeX(staticPivot);
+        onRope = true;
+        canMove = true;
+
+        if (animator != null)
+            animator.Play("Balance");
     }
 
     private void OnTriggerExit(Collider other)
@@ -154,7 +190,7 @@ public class PlayerController : MonoBehaviour
             transform.eulerAngles = euler;
 
             if (animator != null)
-                animator.Play("LeanBlend");
+                animator.Play("BalanceOff");
             transform.rotation = Quaternion.Euler(0f, -90f, 0f);
         }
     }
