@@ -8,6 +8,15 @@ TagManager:
   - Rope
   - Destroy
   - Disk
+  - Road
+  - GrandeA
+  - GrandeB
+  - Mediano
+  - PequenoA
+  - PequenoB
+  - CoinGroup
+  - NormalTile
+  - RopeTile
   layers:
   - Default
   - TransparentFX
@@ -15,7 +24,7 @@ TagManager:
   - Ground
   - Water
   - UI
-  - BonesView
+  - 
   - 
   - 
   - 
