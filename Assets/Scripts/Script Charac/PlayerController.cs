@@ -2,6 +2,14 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    [Header("Referencia Tracker Camara")] 
+    public PipeServer bodyTracker;
+    public float sensTilt = 1.5f;
+
+    private float smoothedMovement; // Guardará el valor suavizado
+    [Tooltip("Controla el suavizado. Más alto = más rápido y nervioso. Más bajo = más suave y con más inercia.")]
+    public float smoothingFactor = 5f;
+
     [Header("Movimiento General")]
     public float walkSpeed = 5f;
 
@@ -36,7 +44,20 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        movement = Input.GetAxis("Horizontal");
+        //movement = Input.GetAxis("Horizontal");
+        float rawMovement = 0f;
+        if (bodyTracker != null)
+        {
+            // Leemos el ángulo de inclinación desde el tracker
+            float tiltAngle = bodyTracker.shoulderTiltAngle;
+
+            // Convertimos el ángulo a un valor entre -1 y 1 para que el resto del código funcione igual.
+            // El movimiento será máximo cuando el ángulo llegue al 'maxTiltAngle'.
+            rawMovement = Mathf.Clamp(tiltAngle / maxTiltAngle, -1f, 1f);
+        }
+        movement = Mathf.Lerp(movement, rawMovement, smoothingFactor * Time.fixedDeltaTime);
+
+        
 
         if (onRope && staticPivot != null)
         {
@@ -47,13 +68,13 @@ public class PlayerController : MonoBehaviour
             MoveNormally();
         }
 
-        float leanInput = Input.GetAxis("Horizontal");
-        animator.SetFloat("LeanDirection", leanInput);
+        //float leanInput = Input.GetAxis("Horizontal");
+        animator.SetFloat("LeanDirection", movement);
     }
 
     private void MoveNormally()
     {
-        Vector3 newVelocity = new Vector3(movement * walkSpeed, rb.linearVelocity.y, 0f);
+        Vector3 newVelocity = new Vector3(movement * walkSpeed * sensTilt, rb.linearVelocity.y, 0f);
         rb.linearVelocity = newVelocity;
     }
 
