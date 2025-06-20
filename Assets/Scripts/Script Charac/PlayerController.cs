@@ -13,6 +13,10 @@ public class PlayerController : MonoBehaviour
     [Header("Transición a la Cuerda")]
     public float moveToRopeDuration = 1.5f;
 
+    [Header("Partículas Splash")]
+    public Transform splashLeftPoint;
+    public Transform splashRightPoint;
+
     public bool onRope = false;
     private Transform staticPivot;
     private float fixedZ;
@@ -110,6 +114,24 @@ public class PlayerController : MonoBehaviour
                 {
                     GameFlowManager.Instance.AgregarPuntos(-pointsLossPerTick);
                 }
+
+                // Activamos partículas desde el punto correspondiente
+                Vector3 particlePosition = transform.position;
+
+                if (angle > 0 && splashRightPoint != null)
+                {
+                    particlePosition = splashRightPoint.position;
+                }
+                else if (angle < 0 && splashLeftPoint != null)
+                {
+                    particlePosition = splashLeftPoint.position;
+                }
+
+                if (ParticlePoolManager.Instance != null && ParticlePoolManager.Instance.splashParticlePool != null)
+                {
+                    ParticlePoolManager.Instance.splashParticlePool.PlayParticles(particlePosition);
+                }
+
                 lossTimer = 0f;
             }
         }
