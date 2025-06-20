@@ -685,6 +685,8 @@ GameObject:
   - component: {fileID: 261878144}
   - component: {fileID: 261878143}
   - component: {fileID: 261878142}
+  - component: {fileID: 261878145}
+  - component: {fileID: 261878146}
   m_Layer: 0
   m_Name: UI Manager
   m_TagString: Untagged
@@ -741,6 +743,33 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &261878145
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 261878141}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ce6e6d88d721e74ab2b3f097035189e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rutInputField: {fileID: 1489333543}
+--- !u!114 &261878146
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 261878141}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c15c7b94a1f03824080551305c574622, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rutInputField: {fileID: 1489333543}
+  submitButton: {fileID: 1402701533}
 --- !u!1 &308127905
 GameObject:
   m_ObjectHideFlags: 0
@@ -3546,6 +3575,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db782bfa2b58d6f4e992cc5b0e15ca9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentRut: default
+  puntosActuales: 0
 --- !u!4 &1292508812
 Transform:
   m_ObjectHideFlags: 0
@@ -3711,7 +3742,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1405148643
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5034,7 +5065,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1599992375
 RectTransform:
   m_ObjectHideFlags: 0
