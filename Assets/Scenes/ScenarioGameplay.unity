@@ -581,6 +581,7 @@ MonoBehaviour:
   walkSpeed: 20
   rotationSpeed: 200
   maxTiltAngle: 45
+  moveToRopeDuration: 1.5
   onRope: 0
   tiltThreshold: 25
   pointsLossPerTick: 10
@@ -773,7 +774,7 @@ RectTransform:
   m_GameObject: {fileID: 889657384}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1235951298}
@@ -781,7 +782,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -98, y: -58}
+  m_AnchoredPosition: {x: -162, y: -58}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &889657386
@@ -1362,6 +1363,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63fea968d657a394c97c2afd85f188b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tiempoRestante: 0
+  finalScene: 
   textoTiempo: {fileID: 889657386}
 --- !u!1 &1419441774
 GameObject:
@@ -1579,14 +1582,14 @@ RectTransform:
   m_GameObject: {fileID: 1787300633}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 250856348}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 30, y: -16}
+  m_AnchoredPosition: {x: 21, y: -5.393982}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1787300635
