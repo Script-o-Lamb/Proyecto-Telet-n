@@ -5805,7 +5805,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pauseMenuUI: {fileID: 1716831263}
-  finalScene: ScenarioFinal
+  finalSceneName: ScenarioFinal
 --- !u!114 &752250344
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6878,7 +6878,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1492112126
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7247,8 +7247,8 @@ RectTransform:
   m_LocalScale: {x: 0.66666996, y: 0.66666996, z: 0.66666996}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1673368567}
   - {fileID: 1421146221}
+  - {fileID: 1673368567}
   m_Father: {fileID: 250856348}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -12750,15 +12750,15 @@ PrefabInstance:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 554642426}
+  - {fileID: 1492112128}
   - {fileID: 1613487737}
   - {fileID: 2850475149816069618}
   - {fileID: 930792960}
-  - {fileID: 554642426}
+  - {fileID: 1419441776}
   - {fileID: 1078926414}
   - {fileID: 250856348}
   - {fileID: 752250342}
-  - {fileID: 1492112128}
-  - {fileID: 1419441776}
   - {fileID: 1842851781}
   - {fileID: 956881208}
   - {fileID: 636760050}

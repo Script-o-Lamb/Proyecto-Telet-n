@@ -4,9 +4,9 @@ using UnityEngine;
 public class PauseMenu : MonoBehaviour
 {
     public GameObject pauseMenuUI; // El panel del menú de pausa
-    [SerializeField] private string finalScene;
+    [SerializeField] private string finalSceneName = "FinalScene"; // nombre de la escena final
 
-    private bool isPaused;
+    private bool isPaused = false;
 
     void Update()
     {
@@ -35,10 +35,15 @@ public class PauseMenu : MonoBehaviour
 
     public void QuitGame()
     {
-        // Guarda el puntaje final usando el GameFlowManager
-        GameFlowManager.Instance.GuardarPuntajeFinal();
+        if (GameFlowManager.Instance != null)
+        {
+            GameFlowManager.Instance.GuardarPuntajeFinal();
+        }
 
-        // Cambia a la escena final
-        SceneManager.LoadScene(finalScene);
+        // Asegúrate de reiniciar el tiempo por si estaba en pausa
+        Time.timeScale = 1f;
+
+        // Cargar la escena final
+        SceneManager.LoadScene(finalSceneName);
     }
 }
