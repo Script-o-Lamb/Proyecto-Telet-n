@@ -786,6 +786,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 709195c76ce5a854cbfb9ccd1f868b41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bodyTracker: {fileID: 499442782}
+  sensTilt: 3.5
+  smoothingFactor: 5
   walkSpeed: 20
   rotationSpeed: 200
   maxTiltAngle: 45
@@ -1686,7 +1689,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -0.00012207031, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 250, y: 250}
   m_Pivot: {x: 1, y: 0}
 --- !u!114 &988997374
