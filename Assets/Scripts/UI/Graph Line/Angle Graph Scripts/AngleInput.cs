@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Windows;
 
 public class AngleInput : MonoBehaviour
 {
+    public PlayerController playerController;
     public float moveSpeed = 10f;
     public string inputAxis;
 
@@ -31,7 +33,14 @@ public class AngleInput : MonoBehaviour
 
     void Update()
     {
-        float input = Input.GetAxisRaw(inputAxis); // valor entre -1 y 1
+        //float input = Input.GetAxisRaw(inputAxis); // valor entre -1 y 1
+        float input = 0f;
+        if (playerController != null)
+        {
+            // Leemos la variable 'movement' directamente del PlayerController.
+            // Esta variable ya está suavizada y en el rango de -1 a 1.
+            input = playerController.movement;
+        }
         float targetY = input * moveRange;
 
         float newY = Mathf.Lerp(pointRect.anchoredPosition.y, initialPosition.y + targetY, Time.deltaTime * moveSpeed);

@@ -31,7 +31,7 @@ public class PlayerController : MonoBehaviour
     private float fixedY;
 
     private Rigidbody rb;
-    private float movement;
+    public float movement;
     private Animator animator;
     private bool canMove = true;
 
