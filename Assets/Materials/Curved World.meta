@@ -1,6 +1,10 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Materials/Curved World.meta
 guid: ae4483f02e0e6ba4ebe9356d8cffe12b
 folderAsset: yes
+========
+guid: 03f94b15d2d0dbe4ba35283cc1809b8d
+>>>>>>>> Fusion:Assets/Scenes/ScenarioCamera.unity.meta
 DefaultImporter:
   externalObjects: {}
   userData: 
