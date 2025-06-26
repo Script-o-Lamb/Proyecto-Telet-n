@@ -6,7 +6,6 @@ public class Item : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            // Aquí podés sumar puntos, reproducir sonido, etc.
             gameObject.SetActive(false);
         }
 

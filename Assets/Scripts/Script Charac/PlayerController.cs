@@ -48,28 +48,21 @@ public class PlayerController : MonoBehaviour
 
         float desiredRotation = movement * rotationSpeed * Time.fixedDeltaTime;
 
-        // Calcular vector desde el centro del cilindro al personaje
         Vector3 toPlayer = transform.position - staticPivot.position;
 
-        // El eje de rotación es el local right del cilindro
         Vector3 rotationAxis = staticPivot.right;
 
-        // Proyectamos el vector al personaje en el plano perpendicular al eje de rotación
         Vector3 projected = Vector3.ProjectOnPlane(toPlayer, rotationAxis).normalized;
 
-        // Elegimos un vector de referencia en el mismo plano (usamos up del cilindro)
         Vector3 reference = Vector3.ProjectOnPlane(staticPivot.up, rotationAxis).normalized;
 
-        // Obtenemos el ángulo firmado entre los vectores
         float angle = Vector3.SignedAngle(reference, projected, rotationAxis);
 
-        // Limitamos la rotación solo si no excede los ángulos
         if ((movement > 0 && angle < maxTiltAngle) || (movement < 0 && angle > -maxTiltAngle))
         {
             transform.RotateAround(staticPivot.position, rotationAxis, desiredRotation);
         }
 
-        // Mantener al personaje fijo en el eje Z
         Vector3 pos = transform.position;
         pos.z = fixedZ;
         transform.position = pos;
@@ -110,7 +103,6 @@ public class PlayerController : MonoBehaviour
 
             staticPivot = null;
 
-            // Restaurar rotación Z
             Vector3 euler = transform.eulerAngles;
             euler.z = 0f;
             transform.eulerAngles = euler;

@@ -40,7 +40,7 @@ public class ItemSpawner : MonoBehaviour
                 break;
             }
 
-            float heightOffset = 1.0f; // cuánto levantar sobre la cuerda
+            float heightOffset = 1.0f;
             Vector3 offset = -ropeTransform.forward * heightOffset; 
             Vector3 finalPosition = spawnPosition + offset;
 

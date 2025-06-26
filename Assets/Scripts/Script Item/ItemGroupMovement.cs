@@ -13,7 +13,7 @@ public class ItemGroupMovement : MonoBehaviour
     {
         if (other.CompareTag("Destroy"))
         {
-            gameObject.SetActive(false); // Desactiva TODO el grupo
+            gameObject.SetActive(false);
         }
     }
 }

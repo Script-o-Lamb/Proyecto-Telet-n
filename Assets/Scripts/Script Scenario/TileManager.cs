@@ -22,7 +22,6 @@ public class TileManager : MonoBehaviour
             GameObject tile = Instantiate(prefab);
             tile.SetActive(false);
 
-            // Asignamos el pool manager al tile
             GroundTile tileScript = tile.GetComponent<GroundTile>();
             if (tileScript != null)
             {

@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class ItemGroupGenerator : MonoBehaviour
 {
-    public string[] groupTags; // Deben coincidir con los tags definidos en el Pool
+    public string[] groupTags;
 
     public float spawnRate = 2f;
     private float nextSpawnTime;
