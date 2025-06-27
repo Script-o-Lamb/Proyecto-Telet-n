@@ -7,7 +7,7 @@ public class PlayerController : MonoBehaviour
     public PipeServer bodyTracker;
     public float sensTilt = 1.5f;
 
-    private float smoothedMovement; // Guardar� el valor suavizado
+    private float smoothedMovement; 
     [Tooltip("Controla el suavizado. M�s alto = m�s r�pido y nervioso. M�s bajo = m�s suave y con m�s inercia.")]
     public float smoothingFactor = 5f;
 
@@ -57,11 +57,7 @@ public class PlayerController : MonoBehaviour
         float rawMovement = 0f;
         if (bodyTracker != null)
         {
-            // Leemos el �ngulo de inclinaci�n desde el tracker
             float tiltAngle = bodyTracker.shoulderTiltAngle;
-
-            // Convertimos el �ngulo a un valor entre -1 y 1 para que el resto del c�digo funcione igual.
-            // El movimiento ser� m�ximo cuando el �ngulo llegue al 'maxTiltAngle'.
             rawMovement = Mathf.Clamp(tiltAngle / maxTiltAngle, -1f, 1f);
         }
         movement = Mathf.Lerp(movement, rawMovement, smoothingFactor * Time.fixedDeltaTime);
@@ -112,7 +108,6 @@ public class PlayerController : MonoBehaviour
 
         rb.linearVelocity = Vector3.zero;
 
-        // Lógica de pérdida de puntos por inclinación
         if (Mathf.Abs(angle) > tiltThreshold)
         {
             isTiltingTooMuch = true;
@@ -133,7 +128,6 @@ public class PlayerController : MonoBehaviour
                     GameFlowManager.Instance.AgregarPuntos(-pointsLossPerTick);
                 }
 
-                // Activamos partículas desde el punto correspondiente
                 Vector3 particlePosition = transform.position;
 
                 if (angle > 0 && splashRightPoint != null)

@@ -25,7 +25,7 @@ public class PipeServer : MonoBehaviour
     public int samplesForPose = 1;
     public float verticalOffset = 1.5f; //MODIFICACION PUNTO ANCLAJE
 
-    [HideInInspector] // Para crear objeto a la altura del hombro
+    [HideInInspector] 
     public GameObject inclinometer;
     
     private bool inclinometerCreated = false;
@@ -171,7 +171,7 @@ public class PipeServer : MonoBehaviour
                 lines[10].SetPosition(4, Position((Landmark)7));
             }
         }
-        public void Calibrate(PipeServer server) //modificacion ()
+        public void Calibrate(PipeServer server) 
         {
             Vector3 centre = (localPositionTargets[(int)Landmark.LEFT_SHOULDER] + localPositionTargets[(int)Landmark.RIGHT_SHOULDER]) / 2f;
             calibrationOffset = -centre + new Vector3(0, server.verticalOffset, 0);
@@ -237,9 +237,7 @@ public class PipeServer : MonoBehaviour
             {
                 if (b.instances[i] != null)
                 {
-                    // Calculamos la posición final a la que debería ir...
                     Vector3 initialTargetPos = b.localPositionTargets[i] + b.calibrationOffset;
-                    // ...y la asignamos DIRECTAMENTE, sin MoveTowards.
                     b.instances[i].transform.localPosition = initialTargetPos;
                 }
             }
@@ -261,7 +259,7 @@ public class PipeServer : MonoBehaviour
             Vector3 n2 = Vector3.Scale(new Vector3(1f, .1f, 1f), GetNormal(b.Position((Landmark)0), b.Position((Landmark)4), b.Position((Landmark)1))).normalized;
             b.head.transform.rotation = Quaternion.LookRotation(-n2, n1);
         }
-        if (b.active) // Funcionamiento inclinómetro
+        if (b.active)
         {
             if (!inclinometerCreated)
             {
@@ -328,7 +326,7 @@ public class PipeServer : MonoBehaviour
                     int i;
                     if (!int.TryParse(s[1], out i)) continue;
 
-                    if (i >= 25) continue; //MODIFICACION
+                    if (i >= 25) continue; 
 
                     h.positionsBuffer[i].value += new Vector3(float.Parse(s[2]), float.Parse(s[3]), float.Parse(s[4]));
                     h.positionsBuffer[i].accumulatedValuesCount += 1;

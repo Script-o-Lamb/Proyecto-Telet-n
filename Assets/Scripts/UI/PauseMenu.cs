@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class PauseMenu : MonoBehaviour
 {
-    public GameObject pauseMenuUI; // El panel del menú de pausa
-    [SerializeField] private string finalSceneName = "FinalScene"; // nombre de la escena final
+    public GameObject pauseMenuUI; 
+    [SerializeField] private string finalSceneName = "FinalScene"; 
 
     private bool isPaused = false;
 
@@ -39,11 +39,8 @@ public class PauseMenu : MonoBehaviour
         {
             GameFlowManager.Instance.GuardarPuntajeFinal();
         }
-
-        // Asegúrate de reiniciar el tiempo por si estaba en pausa
         Time.timeScale = 1f;
 
-        // Cargar la escena final
         SceneManager.LoadScene(finalSceneName);
     }
 }

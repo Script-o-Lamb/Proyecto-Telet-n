@@ -5,7 +5,7 @@ public class TrailReplayRenderer : MonoBehaviour
 {
     public GameObject trailDotPrefab;
     public RectTransform canvasRect;
-    public float spacing; // Separación entre puntos en X
+    public float spacing; 
     [SerializeField] private List<float> recordedYPositions = new();
 
     public void RenderTrail()
@@ -23,7 +23,7 @@ public class TrailReplayRenderer : MonoBehaviour
         }
     }
 
-    // Por si quieres pasarle los datos desde otro script
+    // Transferencia de scripts
     public void SetRecordedPositions(List<float> positions)
     {
         recordedYPositions = new List<float>(positions);

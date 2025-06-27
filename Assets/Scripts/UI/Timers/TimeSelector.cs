@@ -6,7 +6,7 @@ public class TimeSelector : MonoBehaviour
 {
     public TextMeshProUGUI textoTiempo;
     [SerializeField] string escenarioJuego;
-    private int tiempoSeleccionado = 40; // Valor inicial en minutos
+    private int tiempoSeleccionado = 40;
 
     void Start()
     {

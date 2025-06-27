@@ -13,7 +13,6 @@ public class Item : MonoBehaviour
                 GameFlowManager.Instance.AgregarPuntos(cantidadPuntos);
             }
 
-            // Usamos el manager para disparar las partículas
             if (ParticlePoolManager.Instance != null && ParticlePoolManager.Instance.pickupParticlePool != null)
             {
                 ParticlePoolManager.Instance.pickupParticlePool.PlayParticles(transform.position);

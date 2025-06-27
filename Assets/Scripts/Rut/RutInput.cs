@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class RutInput : MonoBehaviour
 {
     public TMP_InputField rutInputField;
-    public Button submitButton;  // El botón que se activa/desactiva
+    public Button submitButton;  
 
     void Start()
     {
@@ -18,11 +18,10 @@ public class RutInput : MonoBehaviour
 
         if (submitButton != null)
         {
-            submitButton.interactable = false; // Empieza desactivado
+            submitButton.interactable = false;
         }
     }
 
-    // Da formato tipo "12.345.678-9" mientras el usuario escribe
     private void FormatRutInput(string input)
     {
         string cleaned = CleanRut(input);
@@ -32,7 +31,6 @@ public class RutInput : MonoBehaviour
         rutInputField.caretPosition = formatted.Length;
     }
 
-    // Valida el RUT para activar o desactivar el botón
     private void ValidateRutInput(string input)
     {
         string cleanedRut = CleanRut(input);
@@ -43,8 +41,6 @@ public class RutInput : MonoBehaviour
             submitButton.interactable = valid;
         }
     }
-
-    // Cuando termina de editar o presiona Enter
     private void OnRutEntered(string input)
     {
         string cleanedRut = CleanRut(input);
@@ -59,7 +55,6 @@ public class RutInput : MonoBehaviour
             Debug.LogWarning("RUT inválido: " + cleanedRut);
         }
     }
-
     private bool IsValidRutLength(string rut)
     {
         return rut.Length == 8 || rut.Length == 9;
@@ -75,7 +70,6 @@ public class RutInput : MonoBehaviour
         }
         return sb.ToString();
     }
-
     private string FormatRut(string rut)
     {
         if (string.IsNullOrEmpty(rut))
@@ -101,7 +95,6 @@ public class RutInput : MonoBehaviour
 
         return formatted;
     }
-
     private string ReverseString(string s)
     {
         char[] arr = s.ToCharArray();

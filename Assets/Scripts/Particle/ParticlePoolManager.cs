@@ -10,7 +10,6 @@ public class ParticlePoolManager : MonoBehaviour
 
     private void Awake()
     {
-        // Aseguramos el singleton
         if (Instance == null)
         {
             Instance = this;
