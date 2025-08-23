@@ -5,8 +5,8 @@ using System.Collections;
 public class BalanceFeedback : MonoBehaviour
 {
     [Header("Configuración del equilibrio")]
-    public float tolerance = 5f;   // Margen de error en grados
-    public float holdTime = 1.5f;  // Tiempo en equilibrio antes de mostrar feedback
+    public float tolerance = 5f;
+    public float holdTime = 1.5f;
 
     [Header("Feedback visual")]
     public GameObject feedbackTextPrefab;
@@ -20,20 +20,42 @@ public class BalanceFeedback : MonoBehaviour
     };
 
     [Header("Posición del feedback")]
-    [Tooltip("Altura sobre el jugador donde aparece el texto.")]
     public float verticalOffset = 2f;
-    [Tooltip("Distancia hacia la cámara (para evitar que atraviese el modelo).")]
     public float forwardOffset = 0.5f;
 
     private float balanceTimer;
     private bool isInBalance;
     private Coroutine feedbackCoroutine;
 
+    // Referencia al script del jugador
+    private PlayerController playerController;
+
+    private void Awake()
+    {
+        playerController = GetComponent<PlayerController>();
+        if (playerController == null)
+            Debug.LogWarning("BalanceFeedback: No se encontró PlayerController en el mismo GameObject.");
+    }
+
     private void Update()
     {
+        // Solo funciona si OnRope es true
+        if (playerController == null || !playerController.onRope)
+        {
+            // Reiniciar cualquier feedback activo si se sale de la cuerda
+            balanceTimer = 0;
+            isInBalance = false;
+            if (feedbackCoroutine != null)
+            {
+                StopCoroutine(feedbackCoroutine);
+                feedbackCoroutine = null;
+            }
+            return;
+        }
+
         // ---- USAR EJE X ----
         float xRotation = transform.eulerAngles.x;
-        if (xRotation > 180) xRotation -= 360; // normalizar ángulo a -180/180
+        if (xRotation > 180) xRotation -= 360;
 
         if (Mathf.Abs(xRotation) <= tolerance)
         {
@@ -65,7 +87,7 @@ public class BalanceFeedback : MonoBehaviour
             string phrase = motivationalPhrases[Random.Range(0, motivationalPhrases.Length)];
             SpawnFeedbackText(phrase);
 
-            yield return new WaitForSeconds(2f); // cada 2 segundos lanza un nuevo mensaje
+            yield return new WaitForSeconds(2f);
         }
     }
 
@@ -73,7 +95,6 @@ public class BalanceFeedback : MonoBehaviour
     {
         if (feedbackTextPrefab != null && Camera.main != null)
         {
-            // Offset dinámico: arriba + hacia la cámara
             Vector3 spawnPos = transform.position
                                + Vector3.up * verticalOffset
                                + Camera.main.transform.forward * forwardOffset;
@@ -130,13 +151,8 @@ public class FloatingTextAnimation : MonoBehaviour
         {
             float t = elapsed / duration;
 
-            // Escala (pop desde pequeño hasta normal)
             transform.localScale = Vector3.Lerp(initialScale, finalScale, Mathf.SmoothStep(0, 1, t));
-
-            // Movimiento hacia arriba
             transform.position = Vector3.Lerp(startPos, targetPos, t);
-
-            // Desvanecer
             text.color = Color.Lerp(initialColor, finalColor, t);
 
             elapsed += Time.deltaTime;
