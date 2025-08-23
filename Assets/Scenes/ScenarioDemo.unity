@@ -5717,6 +5717,29 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &576049266
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 576049260}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1db4d1734ecc1be479f5900b3fd40aa8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tolerance: 5
+  holdTime: 1.5
+  feedbackTextPrefab: {fileID: 4110237270918657138, guid: bb63979baeae9a744be658c0de932029, type: 3}
+  motivationalPhrases:
+  - "\xA1Bien hecho!"
+  - "\xA1Sigue as\xED!"
+  - "\xA1Perfecto!"
+  - "\xA1Mantente firme!"
+  - "\xA1Excelente control!"
+  verticalOffset: 3.75
+  forwardOffset: 0.5
 --- !u!1 &636760049
 GameObject:
   m_ObjectHideFlags: 0
@@ -6286,6 +6309,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 8b48f1122fc5fc3409db76d80d92488f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 576049261}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 8b48f1122fc5fc3409db76d80d92488f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 576049266}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 8b48f1122fc5fc3409db76d80d92488f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 576049265}
