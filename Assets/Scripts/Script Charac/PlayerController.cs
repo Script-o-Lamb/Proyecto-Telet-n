@@ -212,7 +212,7 @@ public class PlayerController : MonoBehaviour
             transform.eulerAngles = euler;
 
             if (animator != null)
-                animator.Play("BalanceOff");
+                animator.Play("LeanBlend");
             transform.rotation = Quaternion.Euler(0f, -90f, 0f);
         }
     }
