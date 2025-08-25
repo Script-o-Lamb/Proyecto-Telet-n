@@ -5857,7 +5857,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bodyTracker: {fileID: 499442782}
-  sensTilt: 8
+  sensTilt: 5.5
   smoothingFactor: 5
   walkSpeed: 20
   rotationSpeed: 200
