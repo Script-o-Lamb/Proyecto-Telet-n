@@ -274,16 +274,17 @@ public class PipeServer : MonoBehaviour
             }
             if (inclinometer != null)
             {
-                Vector3 leftShoulderPos = b.Position(Landmark.LEFT_SHOULDER);
-                Vector3 rightShoulderPos = b.Position(Landmark.RIGHT_SHOULDER);
+                Vector3 leftHipPos = b.Position(Landmark.LEFT_HIP);
+                Vector3 rightHipPos = b.Position(Landmark.RIGHT_HIP);
 
-                inclinometer.transform.position = (leftShoulderPos + rightShoulderPos) / 2f;
+                inclinometer.transform.position = (leftHipPos + rightHipPos) / 2f;
 
-                Vector3 shoulderLine = leftShoulderPos - rightShoulderPos;
+                Vector3 hipLine = leftHipPos - rightHipPos;
+                Vector3 hipLine2D = new Vector3(hipLine.x, hipLine.y, 0);
+                float tiltAngle = Vector3.SignedAngle(Vector3.right, hipLine2D.normalized, Vector3.forward);
 
-                Vector3 shoulderLine2D = new Vector3(shoulderLine.x, shoulderLine.y, 0);
-                float tiltAngle = Vector3.SignedAngle(Vector3.right, shoulderLine2D.normalized, Vector3.forward);
                 this.shoulderTiltAngle = tiltAngle;
+
                 inclinometer.transform.rotation = Quaternion.Euler(0, 0, tiltAngle);
 
             }

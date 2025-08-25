@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class PlayerController : MonoBehaviour
 {
@@ -20,6 +21,24 @@ public class PlayerController : MonoBehaviour
 
     [Header("Transición a la Cuerda")]
     public float moveToRopeDuration = 1.5f;
+
+    [System.Serializable]
+    public class RopePerformanceData
+    {
+        public int ropeSessionID;
+        public float averageAbsoluteDeviation;
+        public float unstableTimePercentage;
+        public float totalTimeOnRope;
+    }
+
+    [Header("Métricas de Desempeño en Cuerda")]
+    public List<RopePerformanceData> allRopeSessions = new List<RopePerformanceData>();
+    private float current_timeOnRope;
+    private float current_timeUnstable;
+    private float current_angleSum;
+    private int current_sampleCount;
+    private bool isTrackingPerformance = false;
+    private float lastRealTiltAngle = 0f;
 
     [Header("Partículas Splash")]
     public Transform splashLeftPoint;
@@ -58,6 +77,7 @@ public class PlayerController : MonoBehaviour
         if (bodyTracker != null)
         {
             float tiltAngle = bodyTracker.shoulderTiltAngle;
+            lastRealTiltAngle = tiltAngle;
             rawMovement = Mathf.Clamp(tiltAngle / maxTiltAngle, -1f, 1f);
         }
         movement = Mathf.Lerp(movement, rawMovement, smoothingFactor * Time.fixedDeltaTime);
@@ -95,6 +115,19 @@ public class PlayerController : MonoBehaviour
         Vector3 reference = Vector3.ProjectOnPlane(staticPivot.up, rotationAxis).normalized;
 
         float angle = Vector3.SignedAngle(reference, projected, rotationAxis);
+        
+        if (isTrackingPerformance)
+        {
+            // Acumulamos los datos en cada frame
+            current_timeOnRope += Time.fixedDeltaTime;
+            current_angleSum += Mathf.Abs(lastRealTiltAngle); // Sumamos el valor absoluto del ángulo
+            current_sampleCount++;
+
+            if (isTiltingTooMuch)
+            {
+                current_timeUnstable += Time.fixedDeltaTime;
+            }
+        }
 
         if ((movement > 0 && angle < maxTiltAngle) || (movement < 0 && angle > -maxTiltAngle))
         {
@@ -199,6 +232,7 @@ public class PlayerController : MonoBehaviour
         fixedY = y;
 
         AlignWithRopeX(staticPivot);
+        StartRopePerformanceTracking();
         onRope = true;
         canMove = true;
 
@@ -210,6 +244,7 @@ public class PlayerController : MonoBehaviour
     {
         if (other.CompareTag("Rope"))
         {
+            StopAndProcessRopePerformance();
             onRope = false;
             rb.useGravity = true;
 
@@ -241,5 +276,53 @@ public class PlayerController : MonoBehaviour
         angle %= 360f;
         if (angle > 180f) angle -= 360f;
         return angle;
+    }
+    private void StartRopePerformanceTracking()
+    {
+        Debug.Log("Iniciando seguimiento de desempeño en la cuerda.");
+        isTrackingPerformance = true;
+
+        current_timeOnRope = 0f;
+        current_timeUnstable = 0f;
+        current_angleSum = 0f;
+        current_sampleCount = 0;
+    }
+    private void StopAndProcessRopePerformance()
+    {
+        if (!isTrackingPerformance) return; // Salir si no estábamos registrando
+
+        Debug.Log("Finalizando seguimiento de desempeño. Calculando resultados...");
+        isTrackingPerformance = false;
+
+        RopePerformanceData sessionData = new RopePerformanceData();
+        sessionData.ropeSessionID = allRopeSessions.Count + 1;
+        sessionData.totalTimeOnRope = current_timeOnRope;
+
+        // Calculamos los promedios (evitando división por cero)
+        if (current_sampleCount > 0)
+        {
+            sessionData.averageAbsoluteDeviation = current_angleSum / current_sampleCount;
+        }
+        else
+        {
+            sessionData.averageAbsoluteDeviation = 0;
+        }
+
+        if (current_timeOnRope > 0)
+        {
+            sessionData.unstableTimePercentage = (current_timeUnstable / current_timeOnRope) * 100f;
+        }
+        else
+        {
+            sessionData.unstableTimePercentage = 0;
+        }
+
+        allRopeSessions.Add(sessionData);
+
+        Debug.Log($"--- Resumen Cuerda #{sessionData.ropeSessionID} ---");
+        Debug.Log($"Desviación Promedio: {sessionData.averageAbsoluteDeviation:F2} grados");
+        Debug.Log($"Tiempo en Desequilibrio: {sessionData.unstableTimePercentage:F1}%");
+        Debug.Log($"Duración Total: {sessionData.totalTimeOnRope:F2} segundos");
+        Debug.Log("---------------------------");
     }
 }
