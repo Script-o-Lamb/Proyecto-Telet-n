@@ -19,7 +19,7 @@ public class CoinGroupSpawner : MonoBehaviour
     public GameObject smallPrefab2;
 
     [Header("Altura fija para los grupos")]
-    public float coinGroupHeight = 0f;  
+    public float coinGroupHeight = 0f;  // Ajusta aquí la altura que deseas
 
     void Start()
     {
@@ -30,7 +30,8 @@ public class CoinGroupSpawner : MonoBehaviour
     {
         List<int> occupiedPositions = new List<int>();
 
-        int largeSpawnChance = Random.Range(0, 3); 
+        // 1. Intentar spawn de grupo grande
+        int largeSpawnChance = Random.Range(0, 3); // 0: pos1, 1: pos2, 2: no spawnea
         if (largeSpawnChance != 2)
         {
             Transform place = spawnOptions.largePositions[largeSpawnChance];
@@ -39,6 +40,7 @@ public class CoinGroupSpawner : MonoBehaviour
             spawnPos.y = coinGroupHeight;
             Instantiate(prefab, spawnPos, Quaternion.identity, transform);
 
+            // Bloquear las posiciones equivalentes en pequeños/medianos
             if (largeSpawnChance == 0)
             {
                 occupiedPositions.Add(0);
@@ -51,6 +53,7 @@ public class CoinGroupSpawner : MonoBehaviour
             }
         }
 
+        // 2. Si spawneó grande, sólo permitir pequeños/medianos en espacios libres
         for (int i = 0; i < spawnOptions.mediumPositions.Length; i++)
         {
             if (occupiedPositions.Contains(i)) continue;

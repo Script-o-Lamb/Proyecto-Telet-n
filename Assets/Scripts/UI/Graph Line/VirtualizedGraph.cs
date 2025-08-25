@@ -27,12 +27,14 @@ public class VirtualizedGraph : MonoBehaviour
         totalPoints = trailData.recordedYPositions.Count;
         totalWidth = pointSpacing * totalPoints;
 
+        // Ajustar tamaño del Content
         contentRect.sizeDelta = new Vector2(totalWidth, contentRect.sizeDelta.y);
 
         viewportWidth = viewportRect.rect.width;
 
         bufferCount = Mathf.CeilToInt(viewportWidth / pointSpacing) + 10;
 
+        // Aseguramos que el Scrollbar notifique al inicio
         UpdateContentPosition();
         UpdateVisibleElements();
     }
@@ -47,8 +49,10 @@ public class VirtualizedGraph : MonoBehaviour
     {
         float normalizedPosition = sharedScrollbar.value;
 
+        // Calcula posición horizontal
         float contentX = -(totalWidth - viewportWidth) * normalizedPosition;
 
+        // MUY IMPORTANTE: mantenemos siempre Y en 0 para centrar el Content verticalmente
         contentRect.anchoredPosition = new Vector2(contentX, 0);
     }
 
@@ -58,6 +62,7 @@ public class VirtualizedGraph : MonoBehaviour
         int firstVisibleIndex = Mathf.Max(0, Mathf.FloorToInt(-scrollX / pointSpacing));
         int lastVisibleIndex = Mathf.Min(totalPoints - 1, firstVisibleIndex + bufferCount);
 
+        // Desactivar puntos fuera de pantalla
         List<int> dotsToRemove = new();
         foreach (var kvp in activeDots)
         {
@@ -71,6 +76,7 @@ public class VirtualizedGraph : MonoBehaviour
         foreach (int key in dotsToRemove)
             activeDots.Remove(key);
 
+        // Desactivar líneas fuera de pantalla
         List<int> linesToRemove = new();
         foreach (var kvp in activeLines)
         {
@@ -84,6 +90,7 @@ public class VirtualizedGraph : MonoBehaviour
         foreach (int key in linesToRemove)
             activeLines.Remove(key);
 
+        // Activar puntos visibles
         for (int i = firstVisibleIndex; i <= lastVisibleIndex; i++)
         {
             if (!activeDots.ContainsKey(i))
@@ -99,6 +106,7 @@ public class VirtualizedGraph : MonoBehaviour
                 activeDots[i] = dot;
             }
 
+            // Activar línea si corresponde
             if (i > 0 && !activeLines.ContainsKey(i - 1))
             {
                 float x0 = (i - 1) * pointSpacing;

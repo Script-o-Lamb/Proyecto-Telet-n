@@ -59,6 +59,7 @@ public class PuntosUI : MonoBehaviour
     {
         textMesh.color = colorCambio;
 
+        // Pulso escala hacia arriba
         float tiempo = 0f;
         while (tiempo < duracionPulso)
         {
@@ -71,6 +72,7 @@ public class PuntosUI : MonoBehaviour
 
         textMesh.transform.localScale = escalaOriginal;
 
+        // Esperar el resto del tiempo del cambio de color
         yield return new WaitForSeconds(duracionCambioColor - duracionPulso);
 
         textMesh.color = normalColor;

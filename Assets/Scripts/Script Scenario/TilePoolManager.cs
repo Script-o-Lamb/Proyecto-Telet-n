@@ -30,6 +30,7 @@ public class TilePoolManager : MonoBehaviour
 
     private void Start()
     {
+        // Inicializamos pools separados
         for (int i = 0; i < poolSize; i++)
         {
             GameObject normalTile = Instantiate(normalTilePrefab, transform);
@@ -41,6 +42,7 @@ public class TilePoolManager : MonoBehaviour
             ropeTilePool.Enqueue(ropeTile);
         }
 
+        // Llenamos inicialmente
         for (int i = 0; i < tilesAhead; i++)
         {
             SpawnTile();
@@ -65,12 +67,13 @@ public class TilePoolManager : MonoBehaviour
         activeTiles.Remove(tile);
         tile.SetActive(false);
 
+        // Devolver al pool correspondiente
         if (tile.CompareTag("NormalTile"))
             normalTilePool.Enqueue(tile);
         else if (tile.CompareTag("RopeTile"))
             ropeTilePool.Enqueue(tile);
 
-        SpawnTile(); 
+        SpawnTile(); // Spawneamos uno nuevo inmediatamente
     }
 
     private void SpawnTile()
@@ -98,6 +101,7 @@ public class TilePoolManager : MonoBehaviour
         tileToSpawn.SetActive(true);
         activeTiles.Add(tileToSpawn);
 
+        // Alternamos para el siguiente
         spawnNormalNext = !spawnNormalNext;
     }
 }

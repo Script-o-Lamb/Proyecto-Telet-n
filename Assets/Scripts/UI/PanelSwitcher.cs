@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 public class PanelSwitcher : MonoBehaviour
 {
     [Header("Paneles")]
-    public List<GameObject> paneles; 
+    public List<GameObject> paneles; // Lista genérica de paneles
 
     [Header("Escenas")]
     public string escena;

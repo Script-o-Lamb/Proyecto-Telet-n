@@ -23,6 +23,7 @@ public class ParticlePool : MonoBehaviour
     {
         if (pool.Count == 0)
         {
+            // Si el pool está vacío, instanciamos uno nuevo (opcional, para evitar que falle)
             GameObject obj = Instantiate(particlePrefab, transform);
             obj.SetActive(false);
             pool.Enqueue(obj);
@@ -40,6 +41,7 @@ public class ParticlePool : MonoBehaviour
         }
         else
         {
+            // Si por alguna razón no tiene ParticleSystem, devolvemos al pool enseguida
             pool.Enqueue(particleObj);
         }
     }

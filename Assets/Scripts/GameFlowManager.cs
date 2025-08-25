@@ -33,9 +33,9 @@ public class GameFlowManager : MonoBehaviour
         if (!string.IsNullOrEmpty(rut))
         {
             currentRut = rut;
-            puntosActuales = 0f;
+            puntosActuales = 0f; // SIEMPRE reiniciar a 0 al cambiar de perfil
             indexActual = PlayerPrefs.GetInt("UltimoIndex_" + currentRut, 0);
-            CargarPuntajesParaInspector();
+            CargarPuntajesParaInspector();  // ← Cargamos los puntajes al cambiar de perfil
         }
     }
 
@@ -55,7 +55,7 @@ public class GameFlowManager : MonoBehaviour
         PlayerPrefs.SetInt("UltimoIndex_" + currentRut, indexActual);
         PlayerPrefs.Save();
         puntosActuales = 0f;
-        CargarPuntajesParaInspector(); 
+        CargarPuntajesParaInspector();  // ← refrescamos también al guardar
     }
 
     public float ObtenerPuntajeGuardado(int i)
@@ -81,6 +81,8 @@ public class GameFlowManager : MonoBehaviour
             puntajesGuardados.Add(ObtenerPuntajeGuardado(i));
         }
     }
+
+    // Método público para que cualquier script pueda obtener el listado completo de puntajes
     public List<float> ObtenerTodosLosPuntajes()
     {
         return new List<float>(puntajesGuardados);

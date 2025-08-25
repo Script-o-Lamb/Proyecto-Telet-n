@@ -9,11 +9,11 @@ public class Timer : MonoBehaviour
     private bool contadorActivo = true;
     [SerializeField] private string finalScene;
 
-    public TextMeshProUGUI textoTiempo; 
+    public TextMeshProUGUI textoTiempo; // Asigna en el Inspector
 
     void Start()
     {
-        Time.timeScale = 1f;
+        Time.timeScale = 1f; // Reinicia el tiempo si venías de una pausa
         tiempoRestante = GameSettings.tiempoEnSegundos;
     }
 
@@ -46,6 +46,7 @@ public class Timer : MonoBehaviour
 
     void LoadNextScene()
     {
+        // Guardamos el puntaje final y pasamos a la escena final
         GameFlowManager.Instance.GuardarPuntajeFinal();
         SceneManager.LoadScene(finalScene);
     }
