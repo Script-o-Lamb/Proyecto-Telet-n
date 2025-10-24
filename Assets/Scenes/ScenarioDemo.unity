@@ -6625,6 +6625,7 @@ GameObject:
   - component: {fileID: 956881210}
   - component: {fileID: 956881209}
   - component: {fileID: 956881211}
+  - component: {fileID: 956881212}
   m_Layer: 0
   m_Name: Game Manager
   m_TagString: Untagged
@@ -6695,6 +6696,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pickupParticlePool: {fileID: 1860633328}
   splashParticlePool: {fileID: 531746203}
+--- !u!114 &956881212
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 956881206}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f10944e2bd521b545aead19bee8507d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pipeServer: {fileID: 499442782}
+  angleDataAsset: {fileID: 11400000, guid: 17488f7d589470f4cb86b6c0bc1f70ff, type: 2}
+  mensajeUI: {fileID: 0}
+  recordInterval: 0.05
+  angleThreshold: 0.5
+  maxRecordedAngles: 50000
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
