@@ -6713,7 +6713,7 @@ MonoBehaviour:
   angleDataAsset: {fileID: 11400000, guid: 17488f7d589470f4cb86b6c0bc1f70ff, type: 2}
   mensajeUI: {fileID: 0}
   recordInterval: 0.05
-  angleThreshold: 0.5
+  angleThreshold: 0
   maxRecordedAngles: 50000
 --- !u!1 &963194225
 GameObject:

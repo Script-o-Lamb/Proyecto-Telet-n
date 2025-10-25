@@ -15,7 +15,7 @@ public class AngleRecorder : MonoBehaviour
     public int maxRecordedAngles = 50000;    // Máximo de ángulos en memoria
 
     private float timer = 0f;
-    private Queue<float> recordedAngles = new Queue<float>(); // Cola más eficiente que List
+    private Queue<float> recordedAngles = new Queue<float>();
     private bool sessionEnded = false;
     private float lastRecordedAngle = float.NaN;
 
@@ -27,7 +27,7 @@ public class AngleRecorder : MonoBehaviour
 
     void Update()
     {
-        if (pipeServer == null) return;
+        if (pipeServer == null || sessionEnded) return;
 
         timer += Time.deltaTime;
         if (timer >= recordInterval)
@@ -47,9 +47,8 @@ public class AngleRecorder : MonoBehaviour
 
     private void RecordAngle(float angle)
     {
-        // Limitar tamaño máximo sin costo de rendimiento
         if (recordedAngles.Count >= maxRecordedAngles)
-            recordedAngles.Dequeue(); // Quita el más antiguo
+            recordedAngles.Dequeue();
 
         recordedAngles.Enqueue(angle);
     }
@@ -87,14 +86,13 @@ public class AngleRecorder : MonoBehaviour
         if (mensajeUI != null)
             mensajeUI.text = mensaje;
 
-        // 4. Guardar puntaje final (si existe el GameFlowManager)
+        // 4. Guardar sesión completa en GameFlowManager
         if (GameFlowManager.Instance != null)
-            GameFlowManager.Instance.GuardarPuntajeFinal();
+            GameFlowManager.Instance.GuardarSesionFinal(promedio);
     }
 
     void OnDisable()
     {
-        // Si el objeto se desactiva sin terminar sesión, la finalizamos automáticamente
         if (!sessionEnded)
             TerminarSesion();
     }

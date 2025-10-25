@@ -1,5 +1,5 @@
-﻿using UnityEngine.SceneManagement;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 
 public class GameFlowManager : MonoBehaviour
@@ -14,6 +14,9 @@ public class GameFlowManager : MonoBehaviour
 
     [Header("Debug - Puntajes actuales")]
     [SerializeField] private List<float> puntajesGuardados = new List<float>();
+
+    [Header("Debug - Promedios de inclinación")]
+    [SerializeField] private List<float> promediosInclinacionGuardados = new List<float>();
 
     private void Awake()
     {
@@ -33,9 +36,10 @@ public class GameFlowManager : MonoBehaviour
         if (!string.IsNullOrEmpty(rut))
         {
             currentRut = rut;
-            puntosActuales = 0f; // SIEMPRE reiniciar a 0 al cambiar de perfil
+            puntosActuales = 0f; // reiniciar puntaje al cambiar de perfil
             indexActual = PlayerPrefs.GetInt("UltimoIndex_" + currentRut, 0);
-            CargarPuntajesParaInspector();  // ← Cargamos los puntajes al cambiar de perfil
+            CargarPuntajesParaInspector();
+            CargarPromediosParaInspector();
         }
     }
 
@@ -48,14 +52,22 @@ public class GameFlowManager : MonoBehaviour
 
     public float GetPuntosActuales() => puntosActuales;
 
-    public void GuardarPuntajeFinal()
+    public void GuardarSesionFinal(float promedioInclinacion)
     {
+        // Guardar puntaje y promedio
         PlayerPrefs.SetFloat($"Puntaje_{currentRut}_{indexActual}", puntosActuales);
+        PlayerPrefs.SetFloat($"PromedioInclinacion_{currentRut}_{indexActual}", promedioInclinacion);
+
+        // Actualizar listas de debug
+        CargarPuntajesParaInspector();
+        CargarPromediosParaInspector();
+
+        // Avanzar índice
         indexActual = (indexActual + 1) % maxPuntajes;
         PlayerPrefs.SetInt("UltimoIndex_" + currentRut, indexActual);
         PlayerPrefs.Save();
+
         puntosActuales = 0f;
-        CargarPuntajesParaInspector();  // ← refrescamos también al guardar
     }
 
     public float ObtenerPuntajeGuardado(int i)
@@ -63,14 +75,9 @@ public class GameFlowManager : MonoBehaviour
         return PlayerPrefs.GetFloat($"Puntaje_{currentRut}_{i}", 0);
     }
 
-    public int ObtenerUltimoIndex()
+    public float ObtenerPromedioInclinacionGuardado(int i)
     {
-        return PlayerPrefs.GetInt("UltimoIndex_" + currentRut, 0);
-    }
-
-    public string GetRut()
-    {
-        return currentRut;
+        return PlayerPrefs.GetFloat($"PromedioInclinacion_{currentRut}_{i}", 0);
     }
 
     public void CargarPuntajesParaInspector()
@@ -82,31 +89,20 @@ public class GameFlowManager : MonoBehaviour
         }
     }
 
-    // Método público para que cualquier script pueda obtener el listado completo de puntajes
-    public List<float> ObtenerTodosLosPuntajes()
+    public void CargarPromediosParaInspector()
     {
-        return new List<float>(puntajesGuardados);
+        promediosInclinacionGuardados.Clear();
+        for (int i = 0; i < maxPuntajes; i++)
+        {
+            promediosInclinacionGuardados.Add(ObtenerPromedioInclinacionGuardado(i));
+        }
     }
 
-    public void GuardarSesionFinal(float promedioInclinacion)
-    {
-        // Guardar puntaje
-        PlayerPrefs.SetFloat($"Puntaje_{currentRut}_{indexActual}", puntosActuales);
+    public List<float> ObtenerTodosLosPuntajes() => new List<float>(puntajesGuardados);
 
-        // Guardar promedio de inclinación
-        PlayerPrefs.SetFloat($"PromedioInclinacion_{currentRut}_{indexActual}", promedioInclinacion);
+    public List<float> ObtenerTodosLosPromedios() => new List<float>(promediosInclinacionGuardados);
 
-        // Avanzar índice
-        indexActual = (indexActual + 1) % maxPuntajes;
-        PlayerPrefs.SetInt("UltimoIndex_" + currentRut, indexActual);
-        PlayerPrefs.Save();
+    public string GetRut() => currentRut;
 
-        puntosActuales = 0f;
-        CargarPuntajesParaInspector();
-    }
-
-    public float ObtenerPromedioInclinacionGuardado(int i)
-    {
-        return PlayerPrefs.GetFloat($"PromedioInclinacion_{currentRut}_{i}", 0);
-    }
+    public int ObtenerUltimoIndex() => PlayerPrefs.GetInt("UltimoIndex_" + currentRut, 0);
 }
