@@ -2,22 +2,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class AngleRecorderOptimized : MonoBehaviour
+public class AngleRecorder : MonoBehaviour
 {
     [Header("Referencias")]
     public PipeServer pipeServer;
     public RecordedAngleData angleDataAsset;
-    public TextMeshProUGUI mensajeUI;
+    public TextMeshProUGUI mensajeUI; // Opcional: muestra mensaje final
 
     [Header("Opciones de grabación")]
     public float recordInterval = 0.05f;     // Tiempo entre registros
     public float angleThreshold = 0.5f;      // Diferencia mínima para registrar nuevo ángulo
-    public int maxRecordedAngles = 1000;     // Máximo de ángulos a mantener en memoria
+    public int maxRecordedAngles = 50000;    // Máximo de ángulos en memoria
 
     private float timer = 0f;
-    private List<float> recordedAngles = new List<float>();
+    private Queue<float> recordedAngles = new Queue<float>(); // Cola más eficiente que List
     private bool sessionEnded = false;
-    private float lastRecordedAngle = float.NaN; // Para comparar cambios significativos
+    private float lastRecordedAngle = float.NaN;
 
     void Awake()
     {
@@ -34,7 +34,7 @@ public class AngleRecorderOptimized : MonoBehaviour
         {
             float currentAngle = pipeServer.shoulderTiltAngle;
 
-            // Registrar solo si cambio significativo
+            // Registrar solo si hay cambio significativo
             if (float.IsNaN(lastRecordedAngle) || Mathf.Abs(currentAngle - lastRecordedAngle) >= angleThreshold)
             {
                 RecordAngle(currentAngle);
@@ -47,10 +47,11 @@ public class AngleRecorderOptimized : MonoBehaviour
 
     private void RecordAngle(float angle)
     {
+        // Limitar tamaño máximo sin costo de rendimiento
         if (recordedAngles.Count >= maxRecordedAngles)
-            recordedAngles.RemoveAt(0); // Mantener tamaño máximo (FIFO)
+            recordedAngles.Dequeue(); // Quita el más antiguo
 
-        recordedAngles.Add(angle);
+        recordedAngles.Enqueue(angle);
     }
 
     public float CalcularPromedio()
@@ -69,33 +70,34 @@ public class AngleRecorderOptimized : MonoBehaviour
         if (sessionEnded) return;
         sessionEnded = true;
 
-        // Volcar datos al ScriptableObject
+        // 1. Volcar datos al ScriptableObject
         if (angleDataAsset != null)
         {
             angleDataAsset.ClearData();
             angleDataAsset.recordedAngles.AddRange(recordedAngles);
         }
 
-        // Calcular promedio
+        // 2. Calcular promedio
         float promedio = CalcularPromedio();
 
-        // Mostrar mensaje
+        // 3. Mostrar mensaje
         string mensaje = $"Durante la sesión, el usuario mantuvo su inclinación alrededor de {promedio:F1}°";
         Debug.Log(mensaje);
 
         if (mensajeUI != null)
             mensajeUI.text = mensaje;
 
-        // Guardar puntaje final
+        // 4. Guardar puntaje final (si existe el GameFlowManager)
         if (GameFlowManager.Instance != null)
             GameFlowManager.Instance.GuardarPuntajeFinal();
     }
 
     void OnDisable()
     {
+        // Si el objeto se desactiva sin terminar sesión, la finalizamos automáticamente
         if (!sessionEnded)
             TerminarSesion();
     }
 
-    public List<float> GetRecordedAngles() => recordedAngles;
+    public float[] GetRecordedAnglesArray() => recordedAngles.ToArray();
 }
