@@ -5,7 +5,8 @@ using UnityEngine.UI;
 public class RutInput : MonoBehaviour
 {
     public TMP_InputField rutInputField;
-    public Button submitButton;  // El botón que se activa/desactiva
+    public Button submitButton;
+    public SessionListManager sessionListManager; // Referencia al SessionListManager
 
     void Start()
     {
@@ -17,34 +18,26 @@ public class RutInput : MonoBehaviour
         }
 
         if (submitButton != null)
-        {
             submitButton.interactable = false; // Empieza desactivado
-        }
     }
 
-    // Da formato tipo "12.345.678-9" mientras el usuario escribe
     private void FormatRutInput(string input)
     {
         string cleaned = CleanRut(input);
         string formatted = FormatRut(cleaned);
-
         rutInputField.SetTextWithoutNotify(formatted);
         rutInputField.caretPosition = formatted.Length;
     }
 
-    // Valida el RUT para activar o desactivar el botón
     private void ValidateRutInput(string input)
     {
         string cleanedRut = CleanRut(input);
         bool valid = IsValidRutLength(cleanedRut);
 
         if (submitButton != null)
-        {
             submitButton.interactable = valid;
-        }
     }
 
-    // Cuando termina de editar o presiona Enter
     private void OnRutEntered(string input)
     {
         string cleanedRut = CleanRut(input);
@@ -53,6 +46,10 @@ public class RutInput : MonoBehaviour
         {
             GameFlowManager.Instance.SetRut(cleanedRut);
             Debug.Log("Perfil cargado: " + cleanedRut);
+
+            // Actualizar botones de sesión ahora que el RUT está cargado
+            if (sessionListManager != null)
+                sessionListManager.ActualizarBotones();
         }
         else
         {
@@ -78,8 +75,7 @@ public class RutInput : MonoBehaviour
 
     private string FormatRut(string rut)
     {
-        if (string.IsNullOrEmpty(rut))
-            return "";
+        if (string.IsNullOrEmpty(rut)) return "";
 
         string numberPart = rut.Length > 1 ? rut.Substring(0, rut.Length - 1) : "";
         string verifier = rut.Length > 0 ? rut.Substring(rut.Length - 1, 1) : "";
@@ -96,7 +92,7 @@ public class RutInput : MonoBehaviour
 
         string formatted = ReverseString(formattedNumber.ToString());
 
-        if (verifier != "")
+        if (!string.IsNullOrEmpty(verifier))
             formatted += "-" + verifier;
 
         return formatted;

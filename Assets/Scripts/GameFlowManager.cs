@@ -87,4 +87,26 @@ public class GameFlowManager : MonoBehaviour
     {
         return new List<float>(puntajesGuardados);
     }
+
+    public void GuardarSesionFinal(float promedioInclinacion)
+    {
+        // Guardar puntaje
+        PlayerPrefs.SetFloat($"Puntaje_{currentRut}_{indexActual}", puntosActuales);
+
+        // Guardar promedio de inclinación
+        PlayerPrefs.SetFloat($"PromedioInclinacion_{currentRut}_{indexActual}", promedioInclinacion);
+
+        // Avanzar índice
+        indexActual = (indexActual + 1) % maxPuntajes;
+        PlayerPrefs.SetInt("UltimoIndex_" + currentRut, indexActual);
+        PlayerPrefs.Save();
+
+        puntosActuales = 0f;
+        CargarPuntajesParaInspector();
+    }
+
+    public float ObtenerPromedioInclinacionGuardado(int i)
+    {
+        return PlayerPrefs.GetFloat($"PromedioInclinacion_{currentRut}_{i}", 0);
+    }
 }
