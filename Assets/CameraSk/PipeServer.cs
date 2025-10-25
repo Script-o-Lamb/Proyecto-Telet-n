@@ -1,3 +1,4 @@
+﻿using System;
 using System.Collections;
 
 using System.IO;
@@ -19,6 +20,7 @@ public class PipeServer : MonoBehaviour
     public GameObject headPrefab;
     public bool anchoredBody = false;
     public bool enableHead = true;
+    public bool isRunning = true;
     public float multiplier = 10f;
     public float landmarkScale = 1f;
     public float maxSpeed = 50f;
@@ -198,7 +200,10 @@ public class PipeServer : MonoBehaviour
         }
 
     }
-
+    void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
+    }
     private void Start()
     {
         System.Globalization.CultureInfo.DefaultThreadCurrentCulture = System.Globalization.CultureInfo.InvariantCulture;
@@ -270,7 +275,7 @@ public class PipeServer : MonoBehaviour
                 Destroy(inclinometer.GetComponent<BoxCollider>());
                 inclinometer.transform.SetParent(b.parent); 
                 inclinometerCreated = true;
-                Debug.Log("Inclin�metro creado exitosamente!");
+                Debug.Log("Inclinómetro creado exitosamente!");
             }
             if (inclinometer != null)
             {
@@ -304,7 +309,7 @@ public class PipeServer : MonoBehaviour
         print("Connected.");
         var br = new BinaryReader(server, Encoding.UTF8);
 
-        while (true)
+        while (isRunning)
         {
             try
             {
@@ -334,18 +339,37 @@ public class PipeServer : MonoBehaviour
                     h.active = true;
                 }
             }
-            catch (EndOfStreamException)
+            catch (ObjectDisposedException)
             {
+                Debug.Log("Pipe cerrado mientras se leía. Saliendo del hilo Run().");
                 break;                    // When client disconnects
             }
-        }
+            catch (IOException)
+            {
+                Debug.Log("Cliente desconectado o pipe cerrado.");
+                break;
+            }
+        }   
 
     }
 
     private void OnDisable()
     {
         print("Client disconnected.");
-        server.Close();
-        server.Dispose();
+        isRunning = false; // 🔹 Detiene el bucle del hilo
+
+        try
+        {
+            if (server != null)
+            {
+                server.Close();
+                server.Dispose();
+                server = null;
+            }
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogWarning("Error cerrando pipe: " + e.Message);
+        }
     }
 }
