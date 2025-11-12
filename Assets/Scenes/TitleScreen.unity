@@ -9330,7 +9330,7 @@ Transform:
   m_GameObject: {fileID: 1628051835}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1360, y: 703, z: -548}
+  m_LocalPosition: {x: -2737.46, y: 1002.3883, z: -1145.4375}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -9494,15 +9494,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 690e01b8088f8a04caa0fd9d63598a86, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1337
+      value: -2714.46
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 690e01b8088f8a04caa0fd9d63598a86, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 486
+      value: 785.3883
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 690e01b8088f8a04caa0fd9d63598a86, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -55
+      value: -652.4375
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 690e01b8088f8a04caa0fd9d63598a86, type: 3}
       propertyPath: m_LocalRotation.w
@@ -10158,12 +10158,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
+  m_MatchWidthOrHeight: 0.5
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
