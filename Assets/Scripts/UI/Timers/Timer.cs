@@ -9,30 +9,30 @@ public class Timer : MonoBehaviour
     private bool contadorActivo = true;
     [SerializeField] private string finalScene;
 
-    public TextMeshProUGUI textoTiempo; // Asigna en el Inspector
+    public TextMeshProUGUI textoTiempo;
+    [SerializeField] private AngleRecorder angleRecorder;
 
     void Start()
     {
-        Time.timeScale = 1f; // Reinicia el tiempo si venías de una pausa
+        Time.timeScale = 1f;
         tiempoRestante = GameSettings.tiempoEnSegundos;
     }
 
     void Update()
     {
-        if (contadorActivo)
+        if (!contadorActivo) return;
+
+        if (tiempoRestante > 0)
         {
-            if (tiempoRestante > 0)
-            {
-                tiempoRestante -= Time.deltaTime;
-                MostrarTiempo(tiempoRestante);
-            }
-            else
-            {
-                contadorActivo = false;
-                tiempoRestante = 0;
-                MostrarTiempo(tiempoRestante);
-                LoadNextScene();
-            }
+            tiempoRestante -= Time.deltaTime;
+            MostrarTiempo(tiempoRestante);
+        }
+        else
+        {
+            tiempoRestante = 0;
+            MostrarTiempo(tiempoRestante);
+            contadorActivo = false;
+            LoadNextScene();
         }
     }
 
@@ -46,8 +46,10 @@ public class Timer : MonoBehaviour
 
     void LoadNextScene()
     {
-        // Guardamos el puntaje final y pasamos a la escena final
-        GameFlowManager.Instance.GuardarPuntajeFinal();
+        // Terminar la sesión desde AngleRecorder
+        if (angleRecorder != null)
+            angleRecorder.TerminarSesion();
+
         SceneManager.LoadScene(finalScene);
     }
 }
